@@ -41,20 +41,21 @@ class BalitaController extends Controller
             ->with('success', 'Data balita berhasil ditambahkan!');
     }
 
-    public function show(Balita $balita)
-    {
-        return view('balita.show', compact('balita'));
+  public function show($id) {
+    $balita = Balita::findOrFail($id);
+    return view('balita.show', compact('balita'));
     }
 
-    public function edit(Balita $balita)
-    {
+    public function edit($id) {
+    $balita = Balita::findOrFail($id);
         $ibus = Ibu::all();
         $posyandus = Posyandu::all();
         return view('balita.edit', compact('balita', 'ibus', 'posyandus'));
     }
 
-    public function update(Request $request, Balita $balita)
-    {
+public function update(Request $request, $id)
+{
+    $balita = Balita::findOrFail($id);
         $request->validate([
             'ibu_id' => 'required|exists:ibuses,id',
             'posyandu_id' => 'required|exists:posyandus,id',
@@ -72,8 +73,8 @@ class BalitaController extends Controller
             ->with('success', 'Data balita berhasil diperbarui!');
     }
 
-    public function destroy(Balita $balita)
-    {
+    public function destroy($id) {
+        $balita = Balita::findOrFail($id);
         $balita->delete();
         return redirect()->route('balita.index')
             ->with('success', 'Data balita berhasil dihapus!');

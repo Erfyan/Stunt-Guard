@@ -11,7 +11,7 @@ class Balita extends Model
     protected $fillable = [
         'ibu_id',
         'posyandu_id',
-        'nama_balita',
+        'nama_balita',   // <-- pastikan ada
         'nik',
         'jenis_kelamin',
         'tanggal_lahir',

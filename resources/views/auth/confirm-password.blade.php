@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+@stack('styles')
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">

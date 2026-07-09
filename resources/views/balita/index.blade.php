@@ -35,6 +35,11 @@
                 <a href="{{ route('balita.index') }}" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg transition">
                     Reset
                 </a>
+                <!-- Tombol Ekspor PDF -->
+                <a href="{{ route('balita.exportPDF', request()->all()) }}" 
+                class="!bg-red-600 hover:!bg-red-700 !text-white !font-semibold !px-4 !py-2 !rounded-lg !shadow !transition !inline-flex !items-center !gap-2">
+                    <i class="fas fa-file-pdf"></i> Ekspor PDF
+                </a>
             </div>
         </form>
     </div>

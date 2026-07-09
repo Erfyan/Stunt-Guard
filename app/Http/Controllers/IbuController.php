@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Ibu;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class IbuController extends Controller
 {
@@ -109,5 +110,20 @@ class IbuController extends Controller
 
         return redirect()->route('ibu.index')
             ->with('success', 'Data Ibu berhasil dihapus!');
+    }
+    public function exportPDF(Request $request)
+    {
+        $search = $request->get('search');
+
+        $ibus = Ibu::with('user')
+            ->when($search, function ($query, $search) {
+                return $query->where('nama_ibu', 'like', "%{$search}%")
+                            ->orWhere('nik', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->get();
+
+        $pdf = Pdf::loadView('ibu.pdf', compact('ibus', 'search'));
+        return $pdf->download('data-ibu-' . date('Y-m-d') . '.pdf');
     }
 }

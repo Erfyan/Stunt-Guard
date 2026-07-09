@@ -99,7 +99,6 @@
                     @endif
 
                     @if(in_array(Auth::user()->role, ['Admin', 'Petugas']))
-                    <!-- Laporan -->
                     <a href="{{ route('laporan.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition {{ request()->routeIs('laporan.*') ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100' }}">
                         <i class="fas fa-file-alt w-5 text-center"></i>
                         <span>Laporan</span>

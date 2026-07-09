@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BalitaController;
 use App\Http\Controllers\IbuController;
+use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -46,10 +47,13 @@ Route::middleware(['auth'])->group(function () {
     })->name('kms.index');
 
     // Laporan (Sprint 5)
-    Route::get('/laporan', function () {
-        return view('coming-soon', ['title' => 'Laporan']);
-    })->middleware('role:Admin,Petugas')->name('laporan.index');
+    Route::get('/laporan', [LaporanController::class, 'index'])
+        ->middleware('role:Admin,Kader')
+        ->name('laporan.index');
 
+    Route::get('/laporan/export-pdf', [LaporanController::class, 'exportPDF'])
+        ->middleware('role:Admin,Kader')
+        ->name('laporan.exportPDF');
     // Manajemen User (Sprint 5)
     Route::get('/user', function () {
         return view('coming-soon', ['title' => 'Manajemen User']);

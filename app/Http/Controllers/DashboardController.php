@@ -18,20 +18,23 @@ class DashboardController extends Controller
             $totalBalita = Balita::count();
             $totalIbu = Ibu::count();
             $totalUser = User::count();
-            return view('dashboard.admin', compact('totalBalita', 'totalIbu', 'totalUser'));
+            $balitas = Balita::with(['ibu', 'posyandu'])->latest()->limit(10)->get();
+
+            return view('dashboard.admin', compact('totalBalita', 'totalIbu', 'totalUser', 'balitas'));
         }
 
         // Data untuk Kader
-            if ($user->role == 'Kader') {
-                $balitas = Balita::with(['ibu', 'posyandu'])
-                    ->when($user->posyandu_id, function ($query) use ($user) {
-                        return $query->where('posyandu_id', $user->posyandu_id);
-                    })->get();
-                $totalBalita = $balitas->count();
-                $totalIbu = $balitas->pluck('ibu_id')->unique()->count();
-                return view('dashboard.kader', compact('balitas', 'totalBalita', 'totalIbu'));
-            }
+        if ($user->role == 'Kader') {
+            $balitas = Balita::with(['ibu', 'posyandu'])
+                ->when($user->posyandu_id, function ($query) use ($user) {
+                    return $query->where('posyandu_id', $user->posyandu_id);
+                })->get();
 
+            $totalBalita = $balitas->count();
+            $totalIbu = $balitas->pluck('ibu_id')->unique()->count();
+
+            return view('dashboard.kader', compact('balitas', 'totalBalita', 'totalIbu'));
+        }
 
         // Data untuk Ibu
         if ($user->role == 'Ibu') {

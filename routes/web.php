@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BalitaController;
 use App\Http\Controllers\IbuController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,6 +18,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->middleware('role:Admin,Kader')
         ->name('dashboard');
+    // Update Password
+    Route::put('/password', [PasswordController::class, 'update'])
+    ->middleware('role:Admin') // Sesuai permintaan: hanya Admin
+    ->name('password.update');
+    // profile
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->middleware('role:Admin')
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->middleware('role:Admin')
+        ->name('profile.update');
+
+    Route::delete('/profile', [ProfileController::class, 'destroy'])
+        ->middleware('role:Admin')
+        ->name('profile.destroy');
     // Ekspor PDF (diletakkan di atas agar tidak tertangkap oleh {id})
     Route::get('/balita/export-pdf', [BalitaController::class, 'exportPDF'])
         ->middleware('role:Admin,Kader')

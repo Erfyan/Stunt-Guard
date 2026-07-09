@@ -43,8 +43,10 @@
                             <i class="fas fa-chevron-down text-sm"></i>
                         </button>
                         <div x-show="open" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 origin-top-right">
-                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-user-circle"></i> Profil
+                            <!-- Profil -->
+                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition {{ request()->routeIs('profile.*') ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100' }}">
+                                <i class="fas fa-user-circle w-5 text-center"></i>
+                                <span>Profil Saya</span>
                             </a>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf

@@ -11,7 +11,33 @@
             <i class="fas fa-plus"></i> Tambah Balita
         </a>
     </div>
-
+        <!-- Pencarian & Filter -->
+    <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <form action="{{ route('balita.index') }}" method="GET" class="flex flex-wrap gap-3 items-end">
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Cari</label>
+                <input type="text" name="search" value="{{ request('search') }}" 
+                    placeholder="Cari nama atau NIK..." 
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+            </div>
+            <div class="w-40">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select name="status" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+                    <option value="">Semua</option>
+                    <option value="Aktif" {{ request('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
+                    <option value="Non Aktif" {{ request('status') == 'Non Aktif' ? 'selected' : '' }}>Non Aktif</option>
+                </select>
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
+                    <i class="fas fa-search"></i> Cari
+                </button>
+                <a href="{{ route('balita.index') }}" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg transition">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
     <!-- Card Tabel -->
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="overflow-x-auto">
@@ -55,6 +81,9 @@
                     @endforelse
                 </tbody>
             </table>
+            <div class="px-6 py-4">
+            {{ $balitas->links() }}
+            </div>
         </div>
     </div>
 </div>

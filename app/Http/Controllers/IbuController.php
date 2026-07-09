@@ -10,11 +10,19 @@ use Illuminate\Support\Facades\Auth;
 
 class IbuController extends Controller
 {
-    public function index()
+
+    public function index(Request $request)
     {
-        // Jika Kader, hanya lihat ibu di posyandu yang sama (via balita, atau langsung)
-        // Untuk sekarang, tampilkan semua, nanti kita filter
-        $ibus = Ibu::with('user')->get();
+        $search = $request->get('search');
+
+        $ibus = Ibu::with('user')
+            ->when($search, function ($query, $search) {
+                return $query->where('nama_ibu', 'like', "%{$search}%")
+                            ->orWhere('nik', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->paginate(10);
+
         return view('ibu.index', compact('ibus'));
     }
 

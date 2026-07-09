@@ -9,9 +9,23 @@ use Illuminate\Http\Request;
 
 class BalitaController extends Controller
 {
-    public function index()
+
+    public function index(Request $request)
     {
-        $balitas = Balita::with(['ibu', 'posyandu'])->get();
+        $search = $request->get('search');
+        $status = $request->get('status');
+
+        $balitas = Balita::with(['ibu', 'posyandu'])
+            ->when($search, function ($query, $search) {
+                return $query->where('nama_balita', 'like', "%{$search}%")
+                            ->orWhere('nik', 'like', "%{$search}%");
+            })
+            ->when($status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            ->latest()
+            ->paginate(10);
+
         return view('balita.index', compact('balitas'));
     }
 

@@ -17,6 +17,10 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @stack('styles')
 </head>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plugin untuk background warna di grafik -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
 <body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen flex flex-col">
         <!-- Navbar -->
@@ -162,7 +166,6 @@
 
     <!-- Alpine JS (untuk dropdown) -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
-
     @stack('scripts')
 </body>
 </html>

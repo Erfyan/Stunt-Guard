@@ -56,10 +56,51 @@ class BalitaController extends Controller
             ->with('success', 'Data balita berhasil ditambahkan!');
     }
 
-  public function show($id) {
-    $balita = Balita::findOrFail($id);
-    return view('balita.show', compact('balita'));
+    public function show($id)
+    {
+        // Ambil data balita beserta relasi (ibu, posyandu, dan pemeriksaan)
+        $balita = Balita::with([
+            'ibu', 
+            'posyandu', 
+            'pemeriksaans' => function($query) {
+                // Urutkan dari yang paling lama ke terbaru
+                $query->orderBy('tanggal', 'asc');
+            }
+        ])->findOrFail($id);
+
+        // === Format data untuk Chart.js ===
+        
+        // 1. Labels (sumbu X) = tanggal pemeriksaan
+        $chartLabels = $balita->pemeriksaans->map(function($item) {
+            return $item->tanggal->format('d/m/Y');
+        })->toArray();
+
+        // 2. Data Berat Badan (kg)
+        $chartBB = $balita->pemeriksaans->pluck('berat_badan')->toArray();
+
+        // 3. Data Tinggi Badan (cm)
+        $chartTB = $balita->pemeriksaans->pluck('tinggi_badan')->toArray();
+
+        // 4. Data Umur (bulan) - untuk tooltip
+        $chartUmur = $balita->pemeriksaans->pluck('umur_bulan')->toArray();
+
+        // 5. Data Z-Score (untuk zona warna)
+        $chartZscore = $balita->pemeriksaans->pluck('zscore')->toArray();
+
+        // 6. Data Status Gizi (untuk warna titik)
+        $chartStatus = $balita->pemeriksaans->pluck('status_gizi')->toArray();
+
+        return view('balita.show', compact(
+            'balita',
+            'chartLabels',
+            'chartBB',
+            'chartTB',
+            'chartUmur',
+            'chartZscore',
+            'chartStatus'
+        ));
     }
+
 
     public function edit($id) {
     $balita = Balita::findOrFail($id);

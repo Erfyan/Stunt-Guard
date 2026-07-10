@@ -6,6 +6,7 @@ use App\Http\Controllers\BalitaController;
 use App\Http\Controllers\IbuController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PemeriksaanController;
+use App\Http\Controllers\KmsController;
 use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
 
@@ -82,10 +83,13 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('role:Kader')
         ->name('pemeriksaan.detect');
 
-    // Grafik KMS 
-    Route::get('/kms', function () {
-        return view('coming-soon', ['title' => 'Grafik KMS']);
-    })->name('kms.index');
+    // Grafik KMS
+    Route::get('/kms', [KmsController::class, 'index'])
+        ->middleware('role:Admin,Kader')
+        ->name('kms.index');
+    Route::get('/kms/{id}', [KmsController::class, 'show'])
+        ->middleware('role:Admin,Kader')
+        ->name('kms.show');
 
     // Laporan
     Route::get('/laporan', [LaporanController::class, 'index'])

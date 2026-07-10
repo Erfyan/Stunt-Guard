@@ -1,44 +1,64 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">👋 Halo, {{ Auth::user()->nama }}</h1>
-    <p class="text-gray-600 mb-6">Selamat datang di dashboard Kader Posyandu.</p>
+@section('title', 'Dashboard Kader')
+@section('header', '👋 Dashboard Kader')
 
-    <!-- Statistik -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-blue-100 p-4 rounded shadow">
-            <h3 class="font-semibold">Total Balita</h3>
+@section('content')
+<div class="container mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 rounded shadow border-l-4 border-blue-500">
+            <p class="text-gray-500">Total Balita</p>
             <p class="text-2xl font-bold">{{ $totalBalita ?? 0 }}</p>
         </div>
-        <div class="bg-green-100 p-4 rounded shadow">
-            <h3 class="font-semibold">Total Ibu</h3>
-            <p class="text-2xl font-bold">{{ $totalIbu ?? 0 }}</p>
+        <div class="bg-white p-4 rounded shadow border-l-4 border-red-500">
+            <p class="text-gray-500">Stunting</p>
+            <p class="text-2xl font-bold text-red-600">{{ $stunting ?? 0 }}</p>
         </div>
-        <div class="bg-yellow-100 p-4 rounded shadow">
-            <h3 class="font-semibold">Posyandu</h3>
-            <p class="text-2xl font-bold">{{ Auth::user()->posyandu->nama_posyandu ?? 'Belum ditentukan' }}</p>
+        <div class="bg-white p-4 rounded shadow border-l-4 border-green-500">
+            <p class="text-gray-500">Normal</p>
+            <p class="text-2xl font-bold text-green-600">{{ $normal ?? 0 }}</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow border-l-4 border-yellow-500">
+            <p class="text-gray-500">Underweight</p>
+            <p class="text-2xl font-bold text-yellow-600">{{ $underweight ?? 0 }}</p>
         </div>
     </div>
 
+    <!-- Grafik Tren -->
+    <div class="bg-white p-4 rounded shadow mb-6">
+        <h3 class="font-semibold text-gray-700">📈 Tren Stunting 6 Bulan Terakhir</h3>
+        <canvas id="trenChart" height="80"></canvas>
+    </div>
+
+    <!-- Peringatan -->
+    @if(isset($peringatan) && $peringatan->count() > 0)
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded mb-6">
+        <h3 class="font-bold text-red-700">🚨 Peringatan: Anak dengan Z-Score < -3 SD</h3>
+        <ul>
+            @foreach($peringatan as $p)
+                <li>{{ $p->nama_balita }} ({{ $p->umur_bulan }} bulan) - Terakhir: {{ $p->pemeriksaans->first()->tanggal->format('d-m-Y') }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
     <!-- Daftar Balita -->
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div class="px-6 py-4 border-b flex justify-between items-center">
-            <h2 class="text-lg font-semibold">📋 Daftar Balita</h2>
-            <a href="{{ route('balita.create') }}" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">+ Tambah</a>
+    <div class="bg-white rounded shadow overflow-hidden">
+        <div class="px-6 py-4 border-b flex justify-between">
+            <h4 class="font-semibold">📋 Daftar Balita</h4>
+            <a href="{{ route('balita.create') }}" class="text-green-600 hover:underline">+ Tambah</a>
         </div>
-        <table class="w-full divide-y divide-gray-200">
-            <thead class="bg-gray-100">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">JK</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Lahir</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ibu</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                    <th class="px-4 py-2 text-left">Nama</th>
+                    <th class="px-4 py-2 text-left">JK</th>
+                    <th class="px-4 py-2 text-left">Umur</th>
+                    <th class="px-4 py-2 text-left">Status</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($balitas as $balita)
+                @forelse($balitas ?? [] as $b)
                 <tr>
                     <td class="px-6 py-4">{{ $balita->nama_balita ?? $balita->nama ?? '-' }}</td>
                     <td class="px-6 py-4">{{ $balita->jenis_kelamin ?? '-' }}</td>
@@ -52,13 +72,44 @@
                     <td class="px-6 py-4">{{ optional($balita->ibu)->nama_ibu ?? '-' }}</td>
                     <td class="px-6 py-4">
                         <a href="{{ route('balita.show', $balita) }}" class="text-blue-600 hover:underline">Lihat</a>
+                        @if($last)
+                            <span class="px-2 py-0.5 rounded text-xs font-bold {{ statusColorClass($last->status_gizi, $last->status_stunting) }}">
+                                {{ $last->status_stunting ?? $last->status_gizi ?? 'N/A' }}
+                            </span>
+                        @else
+                            <span class="text-gray-400">Belum diukur</span>
+                        @endif
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="5" class="text-center py-4 text-gray-500">Belum ada data balita.</td></tr>
+                <tr><td colspan="4" class="text-center py-4 text-gray-500">Tidak ada data</td></tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 </div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('trenChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: @json($chartLabels ?? []),
+            datasets: [{
+                label: 'Jumlah Stunting',
+                data: @json($chartData ?? []),
+                borderColor: 'red',
+                tension: 0.3,
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'top' } }
+        }
+    });
+</script>
+@endpush
 @endsection

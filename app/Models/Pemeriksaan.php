@@ -17,12 +17,13 @@ class Pemeriksaan extends Model
         'lingkar_kepala',
         'lingkar_lengan',
         'cara_ukur',
-        'zscore',
+        'zscore',          // menyimpan z-score TB/U
         'status_gizi',
         'status_stunting',
         'bb_tidak_nak',
         'catatan',
-        'petugas'
+        'petugas',
+        'created_by'
     ];
 
     protected $casts = [

@@ -141,7 +141,7 @@ CREATE INDEX idx_pemeriksaan_tanggal ON `pemeriksaan` (`tanggal`);
 
 -- 1. User contoh
 INSERT INTO `user` (`nama`, `username`, `password`, `role`, `email`, `no_hp`, `status`) VALUES
-('Admin Utama', 'admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin', 'admin@stuntguard.com', '081234567890', 'Aktif'),
+('Admin Utama', 'admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin', 'admin    @stuntguard.com', '081234567890', 'Aktif'),
 ('Kader Posyandu Mawar', 'kader_mawar', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Kader', 'kader@posyandu.com', '081298765432', 'Aktif'),
 ('Ibu Ani', 'ibu_ani', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Ibu', 'ani@example.com', '081355667788', 'Aktif');
 

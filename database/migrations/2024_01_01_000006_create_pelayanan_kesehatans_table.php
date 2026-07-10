@@ -8,10 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::create('pelayanan_kesehatans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pemeriksaan_id')->constrained('pemeriksaans')->onDelete('cascade');
             $table->enum('asi_eksklusif', ['Ya', 'Tidak'])->nullable();
+            $table->foreignId('pemeriksaan_id')->constrained('pemeriksaans')->onDelete('cascade');
             $table->string('vitamin_a', 50)->nullable();
             $table->string('obat_cacing', 50)->nullable();
             $table->enum('mt_pemulihan', ['Ya', 'Tidak'])->nullable();
@@ -21,6 +22,7 @@ return new class extends Migration
             $table->string('keterangan', 255)->nullable();
             $table->timestamps();
         });
+        Schema::enableForeignKeyConstraints();
     }
 
     public function down(): void

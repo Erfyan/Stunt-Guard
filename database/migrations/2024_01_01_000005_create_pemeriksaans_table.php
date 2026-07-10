@@ -23,7 +23,8 @@ return new class extends Migration
             $table->string('status_stunting', 50)->nullable();
             $table->enum('bb_tidak_nak', ['Ya', 'Tidak'])->nullable();
             $table->text('catatan')->nullable();
-            $table->string('petugas', 100)->nullable();
+            // Kolom 'created_by' dan 'petugas' akan ditambahkan di migrasi terpisah
+            // agar tidak bentrok dengan migrasi add_created_by...
             $table->timestamps();
         });
     }

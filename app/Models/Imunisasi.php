@@ -8,12 +8,7 @@ class Imunisasi extends Model
 {
     protected $table = 'imunisasis';
     
-    protected $fillable = [
-        'pelayanan_id',
-        'jenis_imunisasi',
-        'tanggal',
-        'keterangan'
-    ];
+    protected $fillable = ['pelayanan_id', 'jenis_imunisasi', 'tanggal', 'keterangan'];
 
     // Relasi ke PelayananKesehatan (belongs to)
     public function pelayananKesehatan()

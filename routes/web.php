@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BalitaController;
 use App\Http\Controllers\IbuController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\PemeriksaanController;
 use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
 
@@ -70,25 +71,29 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // ========== ROUTE UNTUK SPRINT 3, 4, 5 (SEMENTARA) ==========
+    // Input Pemeriksaan 
+    Route::get('/pemeriksaan/create/{balita?}', [PemeriksaanController::class, 'create'])
+        ->middleware('role:Kader')
+        ->name('pemeriksaan.create');
+    Route::post('/pemeriksaan', [PemeriksaanController::class, 'store'])
+        ->middleware('role:Kader')
+        ->name('pemeriksaan.store');
+    Route::post('/pemeriksaan/detect', [PemeriksaanController::class, 'detect'])
+        ->middleware('role:Kader')
+        ->name('pemeriksaan.detect');
 
-    // Input Pemeriksaan (Sprint 3)
-    Route::get('/pemeriksaan/create', function () {
-        return view('coming-soon', ['title' => 'Input Pemeriksaan']);
-    })->middleware('role:Kader')->name('pemeriksaan.create');
-
-    // Grafik KMS (Sprint 4)
+    // Grafik KMS 
     Route::get('/kms', function () {
         return view('coming-soon', ['title' => 'Grafik KMS']);
     })->name('kms.index');
 
-    // Laporan (Sprint 5)
+    // Laporan
     Route::get('/laporan', [LaporanController::class, 'index'])
         ->middleware('role:Admin,Kader')
         ->name('laporan.index');
 
 
-    // Manajemen User (Sprint 5)
+    // Manajemen User 
     Route::get('/user', function () {
         return view('coming-soon', ['title' => 'Manajemen User']);
     })->middleware('role:Admin')->name('user.index');

@@ -140,8 +140,8 @@
     $isNormal = ($p->status_gizi == 'Normal' && $p->status_stunting == 'Normal');
     $isOverweight = ($p->status_gizi == 'Overweight / Obese');
 @endphp
-                        <span class="px-2 py-0.5 rounded text-xs font-bold {{ statusColorClass($item->status_gizi, $item->status_stunting) }}">
-                            {{ $item->status_stunting ?? $item->status_gizi ?? 'N/A' }}
+                        <span class="px-2 py-0.5 rounded text-xs font-bold {{ statusColorClass($p->status_gizi, $p->status_stunting) }}">
+                            {{ $p->status_stunting ?? $p->status_gizi ?? 'N/A' }}
                         </span>
                         </td>
                         <td class="px-4 py-2 text-sm">{{ $p->petugas ?? '-' }}</td>

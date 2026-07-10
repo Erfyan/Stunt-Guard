@@ -8,17 +8,7 @@ class PelayananKesehatan extends Model
 {
     protected $table = 'pelayanan_kesehatans';
     
-    protected $fillable = [
-        'pemeriksaan_id',
-        'asi_eksklusif',
-        'vitamin_a',
-        'obat_cacing',
-        'mt_pemulihan',
-        'penyuluhan',
-        'topik_penyuluhan',
-        'rujukan',
-        'keterangan'
-    ];
+    protected $fillable = ['pemeriksaan_id', 'asi_eksklusif', 'vitamin_a', 'obat_cacing', 'mt_pemulihan', 'penyuluhan', 'topik_penyuluhan', 'rujukan', 'keterangan'];
 
     // Relasi ke Pemeriksaan (belongs to)
     public function pemeriksaan()

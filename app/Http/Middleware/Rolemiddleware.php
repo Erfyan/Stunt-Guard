@@ -14,7 +14,17 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
-        if (!in_array(Auth::user()->role, $roles)) {
+        $allowedRoles = collect($roles)
+            ->flatMap(function ($role) {
+                return explode(',', $role);
+            })
+            ->map(function ($role) {
+                return trim($role);
+            })
+            ->filter()
+            ->all();
+
+        if (!in_array(Auth::user()->role, $allowedRoles, true)) {
             abort(403, 'Akses ditolak. Anda tidak memiliki izin.');
         }
 

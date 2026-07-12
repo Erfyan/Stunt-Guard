@@ -135,7 +135,7 @@ public function update(Request $request, $id)
         return redirect()->route('balita.index')
             ->with('success', 'Data balita berhasil dihapus!');
     }
-        public function exportPDF(Request $request)
+    public function exportPDF(Request $request)
     {
         $search = $request->get('search');
         $status = $request->get('status');
@@ -149,9 +149,24 @@ public function update(Request $request, $id)
                 return $query->where('status', $status);
             })
             ->latest()
-            ->get(); // ambil semua (tanpa paginasi)
+            ->get();
 
-        $pdf = Pdf::loadView('balita.pdf', compact('balitas', 'search', 'status'));
+        // Ambil path CSS dari manifest Vite (sama seperti Ibu)
+        $manifestPath = public_path('build/manifest.json');
+        $cssPath = null;
+        if (file_exists($manifestPath)) {
+            $manifest = json_decode(file_get_contents($manifestPath), true);
+            if (isset($manifest['resources/css/pdf.css'])) {
+                $cssPath = $manifest['resources/css/pdf.css']['file'];
+            }
+        }
+
+        // Fallback jika file CSS belum di-build
+        if (!$cssPath) {
+            $cssPath = 'css/pdf.css';
+        }
+
+        $pdf = Pdf::loadView('balita.pdf', compact('balitas', 'search', 'status', 'cssPath'));
         return $pdf->download('data-balita-' . date('Y-m-d') . '.pdf');
     }
 }

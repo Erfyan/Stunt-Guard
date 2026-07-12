@@ -1,8 +1,8 @@
 {{-- resources/views/partials/logo.blade.php --}}
 <div class="glass-logo">
-    <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="180" height="60">
+    <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 200" width="120" height="60">
         <!-- Background halus -->
-        <rect x="0" y="0" width="600" height="200" rx="100" fill="#f472b6" fill-opacity="0.05"/>
+        <rect x="0" y="0" width="350" height="200" rx="100" fill="#f472b6" fill-opacity="0.05"/>
 
         <!-- ====== 1. IKON ANAK + HATI ====== -->
         <g transform="translate(100, 20) scale(0.8)">

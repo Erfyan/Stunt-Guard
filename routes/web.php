@@ -98,6 +98,10 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('role:Admin,Kader')
         ->name('laporan.index');
 
+    Route::get('/', function () {
+    return redirect()->route('login');
+})->name('home');
+
     // ==============================
     // MANAJEMEN USER (hanya Admin)
     // ==============================

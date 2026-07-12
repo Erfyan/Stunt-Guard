@@ -1,64 +1,105 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+@extends('layouts.guest')
 
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+@section('title', 'Register - SIPANTAU STUNTING')
 
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
+@section('content')
+<div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md transition hover:shadow-xl">
 
-            <!-- Nama Lengkap -->
-            <div>
-                <x-label for="name" :value="__('Nama Lengkap')" />
-                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
-            </div>
+    <!-- ===== LOGO ===== -->
+    <div class="flex justify-center mb-3">
+        <a href="/" class="flex items-center gap-2">
+            @include('partials.logo')
+        </a>
+    </div>
 
-            <!-- Email -->
-            <div class="mt-4">
-                <x-label for="email" :value="__('Email')" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
-            </div>
+    <!-- ===== TAGLINE ===== -->
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold text-pink-600">Sipantau Stunting</h1>
+        <h2 class="text-lg font-semibold text-gray-800 mt-1">Wujudkan Generasi Emas Indonesia</h2>
+        <p class="text-sm text-gray-500 mt-2">Sistem pemantauan kesehatan digital yang ceria dan akurat.</p>
+    </div>
 
-            <!-- Pilihan Role -->
-            <div class="mt-4">
-                <x-label for="role" :value="__('Pilih Role')" />
-                <select id="role" name="role" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
-                    <option value="Ibu" {{ old('role') == 'Ibu' ? 'selected' : '' }}>Ibu (Orang Tua)</option>
-                    <option value="Kader" {{ old('role') == 'Kader' ? 'selected' : '' }}>Kader Posyandu</option>
-                    <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
-                </select>
-                @error('role')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+    <div class="mb-6">
+        <h3 class="text-xl font-bold text-gray-800">Daftar Akun</h3>
+        <p class="text-sm text-gray-500">Silakan daftar untuk memulai pemantauan.</p>
+    </div>
 
-            <!-- Password -->
-            <div class="mt-4">
-                <x-label for="password" :value="__('Password')" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            </div>
+    <!-- ===== FORM REGISTER ===== -->
+    <form method="POST" action="{{ route('register') }}" class="space-y-4">
+        @csrf
 
-            <!-- Konfirmasi Password -->
-            <div class="mt-4">
-                <x-label for="password_confirmation" :value="__('Konfirmasi Password')" />
-                <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required />
-            </div>
+        <!-- Nama -->
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">NAMA LENGKAP</label>
+            <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition text-gray-800"
+                   placeholder="Nama lengkap">
+            @error('name')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <!-- Link ke Login -->
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                    {{ __('Sudah punya akun? Login') }}
-                </a>
+        <!-- Email -->
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">EMAIL</label>
+            <input id="email" type="email" name="email" value="{{ old('email') }}" required
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition text-gray-800"
+                   placeholder="email@example.com">
+            @error('email')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
 
-                <x-button class="ml-4">
-                    {{ __('Register') }}
-                </x-button>
-            </div>
-        </form>
-    </x-auth-card>
-</x-guest-layout>
+        <!-- Password -->
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">PASSWORD</label>
+            <input id="password" type="password" name="password" required
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition text-gray-800"
+                   placeholder="Minimal 8 karakter">
+            @error('password')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <!-- Konfirmasi Password -->
+        <div>
+            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">KONFIRMASI PASSWORD</label>
+            <input id="password_confirmation" type="password" name="password_confirmation" required
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition text-gray-800"
+                   placeholder="Ulangi password">
+        </div>
+
+        <!-- Role -->
+        <div>
+            <label for="role" class="block text-sm font-medium text-gray-700">PILIH ROLE</label>
+            <select id="role" name="role"
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition text-gray-800">
+                <option value="Ibu">Ibu (Orang Tua)</option>
+                <option value="Kader">Kader Posyandu</option>
+                <option value="Admin">Admin</option>
+            </select>
+            @error('role')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <button type="submit"
+                class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:scale-[1.02]">
+            Daftar Sekarang
+        </button>
+    </form>
+
+    <!-- Footer -->
+    <div class="mt-6 text-center text-xs text-gray-500 space-y-1">
+        <p><span class="inline-block w-2 h-2 bg-green-500 rounded-full mr-1"></span> SISTEM OPERASI NORMAL</p>
+        <p>VERSI 2.4.0 – SIPANTAU STUNTING © 2024</p>
+        <p class="mt-3 text-gray-400">Dipercaya oleh 1,200+ Tenaga Medis</p>
+    </div>
+
+    <!-- Link ke Login -->
+    <div class="mt-4 text-center">
+        <span class="text-sm text-gray-600">Sudah punya akun?</span>
+        <a href="{{ route('login') }}" class="text-sm text-pink-500 hover:text-pink-700 font-medium transition">Masuk</a>
+    </div>
+</div>
+@endsection

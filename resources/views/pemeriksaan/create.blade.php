@@ -1,21 +1,25 @@
 @extends('layouts.app')
 
 @section('title', 'Input Pemeriksaan')
-@section('header', '📋 Input Pemeriksaan Balita')
+@section('header', '📋 Input Pemeriksaan')
 
 @section('content')
-<div class="container mx-auto max-w-4xl">
-    <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+<div class="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+
+    <!-- === CARD UTAMA === -->
+    <div class="bg-white/20 backdrop-blur-md border border-white/30 shadow-lg rounded-2xl p-6 transition hover:shadow-xl">
 
         @if(session('success'))
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded">
-                {{ session('success') }}
+            <div class="mb-4 bg-pink-100/80 backdrop-blur-sm border-l-4 border-pink-500 text-pink-700 p-4 rounded-xl shadow-sm flex items-center gap-3">
+                <i class="fas fa-check-circle text-pink-500 text-xl"></i>
+                <span>{{ session('success') }}</span>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
-                {{ session('error') }}
+            <div class="mb-4 bg-red-100/80 backdrop-blur-sm border-l-4 border-red-500 text-red-700 p-4 rounded-xl shadow-sm flex items-center gap-3">
+                <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
+                <span>{{ session('error') }}</span>
             </div>
         @endif
 
@@ -23,250 +27,186 @@
             @csrf
 
             <!-- ========================================== -->
-            <!-- 1. DATA BALITA                              -->
+            <!-- 1. INFORMASI BALITA                         -->
             <!-- ========================================== -->
             <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-700 mb-3">👶 Pilih Balita</h3>
+                <h3 class="text-lg font-semibold text-pink-600 mb-3">👶 Informasi Balita</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                    <label class="block text-sm font-medium text-gray-700">Nama Balita <span class="text-red-500">*</span></label>
-                    <select name="balita_id" id="balita_id" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 @error('balita_id') border-red-500 @enderror" required>
-                        <option value="">-- Pilih Balita --</option>
-                        @foreach($balitas as $b)
-                            <option value="{{ $b->id }}" 
-                                    data-umur="{{ $b->tanggal_lahir->diffInMonths(now()) }}"
-                                    data-jk="{{ $b->jenis_kelamin }}"
-                                    data-nama="{{ $b->nama_balita }}"
-                                    {{ (isset($balita) && $balita->id == $b->id) || old('balita_id') == $b->id ? 'selected' : '' }}>
-                                {{ $b->nama_balita }} ({{ $b->tanggal_lahir->diffInMonths(now()) }} bulan) - {{ $b->jenis_kelamin }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('balita_id') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                        <label class="block text-sm font-medium text-gray-700">PILIH BALITA <span class="text-red-500">*</span></label>
+                        <select name="balita_id" id="balita_id"
+                                class="mt-1 w-full bg-gray-50 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition @error('balita_id') border-red-500 @else border-gray-300 @enderror" required>
+                            <option value="">-- Pilih Balita --</option>
+                            @foreach($balitas as $b)
+                                <option value="{{ $b->id }}"
+                                        data-umur="{{ $b->tanggal_lahir->diffInMonths(now()) }}"
+                                        data-jk="{{ $b->jenis_kelamin }}"
+                                        data-nama="{{ $b->nama_balita }}"
+                                        data-nik="{{ $b->nik }}"
+                                        {{ (isset($balita) && $balita->id == $b->id) || old('balita_id') == $b->id ? 'selected' : '' }}>
+                                    {{ $b->nama_balita }} ({{ $b->tanggal_lahir->diffInMonths(now()) }} bulan) - {{ $b->jenis_kelamin }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('balita_id') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">TANGGAL PEMERIKSAAN <span class="text-red-500">*</span></label>
+                        <input type="date" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}"
+                               class="mt-1 w-full bg-gray-50 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition @error('tanggal') border-red-500 @else border-gray-300 @enderror" required>
+                        @error('tanggal') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                    </div>
                 </div>
 
-                    <!-- Informasi Balita -->
-                    <div id="infoBalita" class="bg-gray-50 p-3 rounded-lg {{ isset($balita) ? '' : 'hidden' }}">
-                        <p class="text-sm"><strong>Nama:</strong> <span id="nama_display">{{ $balita->nama_balita ?? '-' }}</span></p>
-                        <p class="text-sm"><strong>Umur:</strong> <span id="umur_display">{{ isset($balita) ? $balita->tanggal_lahir->diffInMonths(now()) : '-' }}</span> bulan</p>
-                        <p class="text-sm"><strong>Jenis Kelamin:</strong> <span id="jk_display">{{ $balita->jenis_kelamin ?? '-' }}</span></p>
-                    </div>
+                <!-- Informasi tambahan (muncul setelah balita dipilih) -->
+                <div id="infoBalita" class="mt-3 bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl p-3 {{ isset($balita) ? '' : 'hidden' }}">
+                    <p class="text-sm"><strong>Nama:</strong> <span id="nama_display">{{ $balita->nama_balita ?? '-' }}</span></p>
+                    <p class="text-sm"><strong>NIK:</strong> <span id="nik_display">{{ $balita->nik ?? '-' }}</span></p>
+                    <p class="text-sm"><strong>Umur:</strong> <span id="umur_display">{{ isset($balita) ? $balita->tanggal_lahir->diffInMonths(now()) : '-' }}</span> bulan</p>
+                    <p class="text-sm"><strong>Jenis Kelamin:</strong> <span id="jk_display">{{ $balita->jenis_kelamin ?? '-' }}</span></p>
                 </div>
             </div>
 
-            <hr class="my-6">
+            <hr class="border-white/30 my-6">
 
             <!-- ========================================== -->
-            <!-- 2. DATA ANTROPOMETRI                        -->
+            <!-- 2. DATA PENGUKURAN                          -->
             <!-- ========================================== -->
             <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-700 mb-3">📏 Data Antropometri</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Tanggal -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Tanggal Pemeriksaan <span class="text-red-500">*</span></label>
-                        <input type="date" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 @error('tanggal') border-red-500 @enderror" required>
-                        @error('tanggal') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    <!-- Cara Ukur -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Cara Ukur</label>
-                        <select name="cara_ukur" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
-                            <option value="">-- Pilih --</option>
-                            <option value="Berdiri" {{ old('cara_ukur') == 'Berdiri' ? 'selected' : '' }}>Berdiri</option>
-                            <option value="Berbaring" {{ old('cara_ukur') == 'Berbaring' ? 'selected' : '' }}>Berbaring</option>
-                        </select>
-                    </div>
-
+                <h3 class="text-lg font-semibold text-pink-600 mb-3">📏 Data Pengukuran</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Berat Badan -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Berat Badan (kg) <span class="text-red-500">*</span></label>
-                        <input type="number" step="0.01" name="berat_badan" id="berat" 
-                               value="{{ old('berat_badan') }}" 
-                               placeholder="Contoh: 12.5" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 @error('berat_badan') border-red-500 @enderror" required>
+                        <label class="block text-sm font-medium text-gray-700">Berat Badan (KG) <span class="text-red-500">*</span></label>
+                        <input type="number" step="0.01" name="berat_badan" id="berat"
+                               value="{{ old('berat_badan') }}"
+                               placeholder="0.0"
+                               class="mt-1 w-full bg-gray-50 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition @error('berat_badan') border-red-500 @else border-gray-300 @enderror" required>
+                        <span class="text-xs text-gray-400">kilogram</span>
                         @error('berat_badan') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Tinggi Badan -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Tinggi Badan (cm) <span class="text-red-500">*</span></label>
-                        <input type="number" step="0.1" name="tinggi_badan" id="tinggi" 
-                               value="{{ old('tinggi_badan') }}" 
-                               placeholder="Contoh: 85.5" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 @error('tinggi_badan') border-red-500 @enderror" required>
+                        <label class="block text-sm font-medium text-gray-700">Tinggi Badan (CM) <span class="text-red-500">*</span></label>
+                        <input type="number" step="0.1" name="tinggi_badan" id="tinggi"
+                               value="{{ old('tinggi_badan') }}"
+                               placeholder="0.0"
+                               class="mt-1 w-full bg-gray-50 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition @error('tinggi_badan') border-red-500 @else border-gray-300 @enderror" required>
+                        <span class="text-xs text-gray-400">centimeter</span>
                         @error('tinggi_badan') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Lingkar Kepala -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Lingkar Kepala (cm)</label>
-                        <input type="number" step="0.1" name="lingkar_kepala" 
-                               value="{{ old('lingkar_kepala') }}" 
-                               placeholder="Contoh: 45.0" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+                        <label class="block text-sm font-medium text-gray-700">Lingkar Kepala (CM)</label>
+                        <input type="number" step="0.1" name="lingkar_kepala"
+                               value="{{ old('lingkar_kepala') }}"
+                               placeholder="0.0"
+                               class="mt-1 w-full bg-gray-50 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition">
+                        <span class="text-xs text-gray-400">centimeter</span>
                     </div>
 
                     <!-- Lingkar Lengan (LiLA) -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Lingkar Lengan (cm)</label>
-                        <input type="number" step="0.1" name="lingkar_lengan" 
-                               value="{{ old('lingkar_lengan') }}" 
-                               placeholder="Contoh: 16.0" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+                        <label class="block text-sm font-medium text-gray-700">LILA (CM)</label>
+                        <input type="number" step="0.1" name="lingkar_lengan"
+                               value="{{ old('lingkar_lengan') }}"
+                               placeholder="0.0"
+                               class="mt-1 w-full bg-gray-50 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition">
+                        <span class="text-xs text-gray-400">centimeter</span>
                     </div>
                 </div>
             </div>
 
             <!-- ========================================== -->
-            <!-- 3. HASIL DETEKSI OTOMATIS                   -->
+            <!-- 3. HASIL DETEKSI OTOMATIS (AJAX)           -->
             <!-- ========================================== -->
-            <!-- Di tempat hasil deteksi -->
             <div id="loadingIndicator" class="hidden items-center gap-3 text-gray-500 mt-2">
                 @include('partials.loading-spinner')
                 <span class="text-sm font-medium text-pink-500">Menganalisis data...</span>
             </div>
-            </div>
-            <div id="hasilDeteksi" class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg hidden">
-                <h3 class="font-bold text-lg text-gray-800">🔬 Hasil Analisis Otomatis</h3>
-                <div id="statusDetail" class="mt-3 text-center p-3 rounded">
+
+            <div id="hasilDeteksi" class="mt-4 p-4 bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl hidden">
+                <h3 class="font-bold text-lg text-pink-600">🔬 Hasil Analisis Otomatis</h3>
+                <div id="statusDetail" class="mt-3 text-center p-3 rounded-lg">
                     <span class="text-sm text-gray-500">Silakan isi data dan pilih anak untuk mendeteksi.</span>
                 </div>
             </div>
 
-            <hr class="my-6">
+            <hr class="border-white/30 my-6">
 
             <!-- ========================================== -->
-            <!-- 4. PELAYANAN KESEHATAN                      -->
+            <!-- 4. TAMBAHAN (Vitamin, Obat, Imunisasi)      -->
             <!-- ========================================== -->
             <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-700 mb-3">💉 Pelayanan Kesehatan</h3>
+                <h3 class="text-lg font-semibold text-pink-600 mb-3">💊 Tambahan</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- ASI Eksklusif -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">ASI Eksklusif</label>
-                        <select name="asi_eksklusif" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
-                            <option value="">-- Pilih --</option>
-                            <option value="Ya" {{ old('asi_eksklusif') == 'Ya' ? 'selected' : '' }}>Ya</option>
-                            <option value="Tidak" {{ old('asi_eksklusif') == 'Tidak' ? 'selected' : '' }}>Tidak</option>
-                        </select>
-                    </div>
-
                     <!-- Vitamin A -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Vitamin A</label>
-                        <input type="text" name="vitamin_a" value="{{ old('vitamin_a') }}" 
-                               placeholder="Contoh: Biru / Merah" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+                        <input type="text" name="vitamin_a" value="{{ old('vitamin_a') }}"
+                               placeholder="Contoh: Biru / Merah"
+                               class="mt-1 w-full bg-gray-50 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition">
+                        <span class="text-xs text-gray-400">Suplemen bulan Februari/Agustus</span>
                     </div>
 
                     <!-- Obat Cacing -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Obat Cacing</label>
-                        <input type="text" name="obat_cacing" value="{{ old('obat_cacing') }}" 
-                               placeholder="Contoh: Albendazole 400 mg" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+                        <input type="text" name="obat_cacing" value="{{ old('obat_cacing') }}"
+                               placeholder="Contoh: Albendazole 400 mg"
+                               class="mt-1 w-full bg-gray-50 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition">
+                        <span class="text-xs text-gray-400">Diberikan setiap 6 bulan</span>
                     </div>
 
-                    <!-- MT Pemulihan -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">MT Pemulihan</label>
-                        <select name="mt_pemulihan" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
-                            <option value="">-- Pilih --</option>
-                            <option value="Ya" {{ old('mt_pemulihan') == 'Ya' ? 'selected' : '' }}>Ya</option>
-                            <option value="Tidak" {{ old('mt_pemulihan') == 'Tidak' ? 'selected' : '' }}>Tidak</option>
-                        </select>
-                    </div>
-
-                    <!-- Penyuluhan -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Penyuluhan</label>
-                        <select name="penyuluhan" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
-                            <option value="">-- Pilih --</option>
-                            <option value="Ya" {{ old('penyuluhan') == 'Ya' ? 'selected' : '' }}>Ya</option>
-                            <option value="Tidak" {{ old('penyuluhan') == 'Tidak' ? 'selected' : '' }}>Tidak</option>
-                        </select>
-                    </div>
-
-                    <!-- Topik Penyuluhan -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Topik Penyuluhan</label>
-                        <input type="text" name="topik_penyuluhan" value="{{ old('topik_penyuluhan') }}" 
-                               placeholder="Contoh: Gizi seimbang" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
-                    </div>
-
-                    <!-- Rujukan -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Rujukan</label>
-                        <input type="text" name="rujukan" value="{{ old('rujukan') }}" 
-                               placeholder="Contoh: Puskesmas X" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
-                    </div>
-
-                    <!-- Keterangan -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Keterangan</label>
-                        <input type="text" name="keterangan" value="{{ old('keterangan') }}" 
-                               placeholder="Catatan tambahan" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
-                    </div>
-                </div>
-            </div>
-
-            <hr class="my-6">
-
-            <!-- ========================================== -->
-            <!-- 5. IMUNISASI                                -->
-            <!-- ========================================== -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-700 mb-3">💉 Imunisasi</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Jenis Imunisasi</label>
-                        <input type="text" name="jenis_imunisasi" value="{{ old('jenis_imunisasi') }}" 
-                               placeholder="Contoh: BCG, DPT, Polio, Campak" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Tanggal Imunisasi</label>
-                        <input type="date" name="tanggal_imunisasi" value="{{ old('tanggal_imunisasi', date('Y-m-d')) }}" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
-                    </div>
+                    <!-- Imunisasi -->
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700">Keterangan Imunisasi</label>
-                        <input type="text" name="keterangan_imunisasi" value="{{ old('keterangan_imunisasi') }}" 
-                               placeholder="Catatan imunisasi" 
-                               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+                        <label class="block text-sm font-medium text-gray-700">Imunisasi</label>
+                        <input type="text" name="jenis_imunisasi" value="{{ old('jenis_imunisasi') }}"
+                               placeholder="Contoh: BCG, DPT, Polio, Campak"
+                               class="mt-1 w-full bg-gray-50 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition">
+                        <span class="text-xs text-gray-400">Lengkapi jadwal imunisasi rutin</span>
                     </div>
                 </div>
             </div>
 
-            <hr class="my-6">
+            <hr class="border-white/30 my-6">
 
             <!-- ========================================== -->
-            <!-- 6. CATATAN                                 -->
+            <!-- 5. CATATAN TAMBAHAN                         -->
             <!-- ========================================== -->
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700">📝 Catatan / Keluhan / Saran</label>
-                <textarea name="catatan" rows="3" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500" placeholder="Tuliskan catatan penting...">{{ old('catatan') }}</textarea>
+                <label class="block text-sm font-medium text-gray-700">📝 Catatan Tambahan</label>
+                <textarea name="catatan" rows="3" class="mt-1 w-full bg-gray-50 border rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition" placeholder="Tuliskan keluhan ibu, saran bidan, atau kondisi khusus balita di sini...">{{ old('catatan') }}</textarea>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 6. TIPS KADER & BANTUAN                    -->
+            <!-- ========================================== -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl p-4">
+                    <h4 class="font-semibold text-pink-600 text-sm">💡 Tips Kader:</h4>
+                    <p class="text-sm text-gray-700 mt-1">Pastikan balita sudah sarapan sebelum diberikan Obat Cacing untuk menghindari mual.</p>
+                </div>
+                <div class="bg-white/30 backdrop-blur-sm border border-white/30 rounded-xl p-4">
+                    <h4 class="font-semibold text-pink-600 text-sm">📞 Butuh Bantuan?</h4>
+                    <p class="text-sm text-gray-700 mt-1">Hubungi tim IT Dinkes untuk akses tambahan.</p>
+                    <p class="text-sm text-pink-500 font-medium mt-1">Kontak Support</p>
+                </div>
             </div>
 
             <!-- ========================================== -->
             <!-- 7. TOMBOL                                  -->
             <!-- ========================================== -->
             <div class="mt-6 flex flex-wrap gap-3">
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg transition flex items-center gap-2 shadow">
-                    <i class="fas fa-save"></i> Simpan Pemeriksaan
+                <button type="submit" class="bg-pink-500 hover:bg-pink-600 text-white font-bold px-6 py-2.5 rounded-xl shadow-lg transition transform hover:scale-[1.02] flex items-center gap-2">
+                    <i class="fas fa-save"></i> Simpan Data Pemeriksaan
                 </button>
-                <a href="{{ route('dashboard') }}" class="bg-gray-400 hover:bg-gray-500 text-white px-6 py-2.5 rounded-lg transition shadow">
+                <a href="{{ route('dashboard') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium px-6 py-2.5 rounded-xl transition flex items-center gap-2">
                     <i class="fas fa-times"></i> Batal
                 </a>
-                <button type="reset" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2.5 rounded-lg transition shadow">
-                    <i class="fas fa-undo"></i> Reset Form
-                </button>
             </div>
 
         </form>
@@ -275,40 +215,6 @@
 
 @push('scripts')
 <script>
-const loadingIndicator = document.getElementById('loadingIndicator');
-
-// Tampilkan loading
-function showLoading() {
-    loadingIndicator.classList.remove('hidden');
-    loadingIndicator.classList.add('flex');
-}
-
-// Sembunyikan loading
-function hideLoading() {
-    loadingIndicator.classList.remove('flex');
-    loadingIndicator.classList.add('hidden');
-}
-
-function doDetection() {
-    // Validasi data...
-    showLoading(); // muncul spinner
-    hasilDiv.classList.add('hidden');
-
-    fetch('{{ route("pemeriksaan.detect") }}', {
-        // ...
-    })
-    .then(res => res.json())
-    .then(data => {
-        hideLoading(); // sembunyi spinner
-        hasilDiv.classList.remove('hidden');
-        // tampilkan hasil...
-    })
-    .catch(err => {
-        hideLoading();
-        // tampilkan error...
-    });
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     // ELEMEN DOM
@@ -319,6 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const hasilDiv = document.getElementById('hasilDeteksi');
     const statusDetail = document.getElementById('statusDetail');
     const infoBalita = document.getElementById('infoBalita');
+    const loadingIndicator = document.getElementById('loadingIndicator');
 
     // ==========================================
     // UPDATE INFO BALITA
@@ -330,6 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('nama_display').textContent = selected.dataset.nama || '-';
             document.getElementById('umur_display').textContent = selected.dataset.umur || '-';
             document.getElementById('jk_display').textContent = selected.dataset.jk || '-';
+            document.getElementById('nik_display').textContent = selected.dataset.nik || '-';
         } else {
             infoBalita.classList.add('hidden');
         }
@@ -346,11 +254,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!balitaId || isNaN(berat) || isNaN(tinggi) || berat <= 0 || tinggi <= 0) {
             hasilDiv.classList.add('hidden');
+            loadingIndicator.classList.add('hidden');
+            loadingIndicator.classList.remove('flex');
             return;
         }
 
-        hasilDiv.classList.remove('hidden');
-        statusDetail.innerHTML = '<span class="text-gray-500">⏳ Menganalisis data...</span>';
+        // Tampilkan loading
+        loadingIndicator.classList.remove('hidden');
+        loadingIndicator.classList.add('flex');
+        hasilDiv.classList.add('hidden');
 
         fetch('{{ route("pemeriksaan.detect") }}', {
             method: 'POST',
@@ -365,17 +277,17 @@ document.addEventListener('DOMContentLoaded', function() {
             })
         })
         .then(res => {
-            if (!res.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!res.ok) throw new Error('Network response was not ok');
             return res.json();
         })
         .then(data => {
-            // Tentukan warna berdasarkan status
+            // Sembunyikan loading
+            loadingIndicator.classList.add('hidden');
+            loadingIndicator.classList.remove('flex');
+            hasilDiv.classList.remove('hidden');
+
             let bgColor = 'bg-green-100 text-green-800';
             let icon = '✅';
-            let statusText = data.status_stunting ?? data.status_gizi ?? 'Normal';
-
             if (data.status_stunting === 'Severely Stunted' || data.status_stunting === 'Stunted') {
                 bgColor = 'bg-red-100 text-red-800';
                 icon = '🚨';
@@ -413,6 +325,9 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         })
         .catch(err => {
+            loadingIndicator.classList.add('hidden');
+            loadingIndicator.classList.remove('flex');
+            hasilDiv.classList.remove('hidden');
             statusDetail.innerHTML = `
                 <div class="bg-red-50 border border-red-200 p-3 rounded text-red-600">
                     <p>❌ Terjadi kesalahan koneksi.</p>

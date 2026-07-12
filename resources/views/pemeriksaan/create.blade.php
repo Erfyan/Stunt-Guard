@@ -123,6 +123,12 @@
             <!-- ========================================== -->
             <!-- 3. HASIL DETEKSI OTOMATIS                   -->
             <!-- ========================================== -->
+            <!-- Di tempat hasil deteksi -->
+            <div id="loadingIndicator" class="hidden items-center gap-3 text-gray-500 mt-2">
+                @include('partials.loading-spinner')
+                <span class="text-sm font-medium text-pink-500">Menganalisis data...</span>
+            </div>
+            </div>
             <div id="hasilDeteksi" class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg hidden">
                 <h3 class="font-bold text-lg text-gray-800">🔬 Hasil Analisis Otomatis</h3>
                 <div id="statusDetail" class="mt-3 text-center p-3 rounded">
@@ -269,6 +275,40 @@
 
 @push('scripts')
 <script>
+const loadingIndicator = document.getElementById('loadingIndicator');
+
+// Tampilkan loading
+function showLoading() {
+    loadingIndicator.classList.remove('hidden');
+    loadingIndicator.classList.add('flex');
+}
+
+// Sembunyikan loading
+function hideLoading() {
+    loadingIndicator.classList.remove('flex');
+    loadingIndicator.classList.add('hidden');
+}
+
+function doDetection() {
+    // Validasi data...
+    showLoading(); // muncul spinner
+    hasilDiv.classList.add('hidden');
+
+    fetch('{{ route("pemeriksaan.detect") }}', {
+        // ...
+    })
+    .then(res => res.json())
+    .then(data => {
+        hideLoading(); // sembunyi spinner
+        hasilDiv.classList.remove('hidden');
+        // tampilkan hasil...
+    })
+    .catch(err => {
+        hideLoading();
+        // tampilkan error...
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     // ELEMEN DOM

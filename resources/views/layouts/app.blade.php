@@ -14,48 +14,71 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    @stack('styles')
-</head>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Plugin untuk background warna di grafik -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
-<body class="font-sans antialiased bg-gray-50">
-    <div class="min-h-screen flex flex-col">
-        <!-- Navbar -->
-        <nav class="bg-green-700 text-white shadow-lg sticky top-0 z-50">
+
+    <!-- Vite Assets (CSS & JS) -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
+</head>
+<body class="font-sans antialiased bg-gradient-to-br from-pink-50 via-white to-pink-100 min-h-screen">
+
+    <!-- ========================================== -->
+    <!-- DEKORASI BLOB DI BACKGROUND                -->
+    <!-- ========================================== -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-400/10 rounded-full filter blur-3xl"></div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MAIN WRAPPER                               -->
+    <!-- ========================================== -->
+    <div class="relative z-10 min-h-screen flex flex-col">
+
+        <!-- ========================================== -->
+        <!-- NAVBAR (Glassmorphism)                     -->
+        <!-- ========================================== -->
+        <nav class="sticky top-0 z-50 bg-white/20 backdrop-blur-xl border-b border-white/30 shadow-lg">
             <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+
                 <!-- Logo -->
-                <a href="{{ route('dashboard') }}" class="text-2xl font-bold flex items-center gap-2">
-                    <i class="fas fa-child"></i>
-                    <span class="hidden sm:inline">SIPANTAU</span>
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 no-underline group">
+                    @include('partials.logo')
+                    <span class="text-pink-600 font-bold text-lg hidden sm:inline group-hover:text-pink-700 transition">
+                        SIPANTAU
+                    </span>
                 </a>
 
                 <!-- Navbar Kanan -->
                 <div class="flex items-center gap-4">
-                    <span class="text-sm hidden md:inline">
-                        <i class="fas fa-user-circle"></i> {{ Auth::user()->nama }}
-                        <span class="ml-2 bg-green-500 px-2 py-0.5 rounded text-xs">
-                            {{ ucfirst(Auth::user()->role) }}
+                    <!-- Nama User -->
+                    <span class="text-sm hidden md:inline text-gray-700">
+                        <i class="fas fa-user-circle text-pink-500"></i>
+                        {{ Auth::user()->nama ?? 'User' }}
+                        <span class="ml-2 bg-pink-500/20 text-pink-700 px-2 py-0.5 rounded-full text-xs font-medium border border-pink-200/50">
+                            {{ ucfirst(Auth::user()->role ?? 'Guest') }}
                         </span>
                     </span>
 
-                    <!-- Dropdown User -->
+                    <!-- Dropdown -->
                     <div class="relative" x-data="{ open: false }" @click.away="open = false">
-                        <button @click="open = !open" class="focus:outline-none hover:bg-green-600 p-1 rounded transition">
-                            <i class="fas fa-chevron-down text-sm"></i>
+                        <button @click="open = !open" class="focus:outline-none hover:bg-white/30 p-2 rounded-xl transition">
+                            <i class="fas fa-chevron-down text-pink-600 text-sm"></i>
                         </button>
-                        <div x-show="open" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 origin-top-right">
-                            <!-- Profil -->
-                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition {{ request()->routeIs('profile.*') ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100' }}">
-                                <i class="fas fa-user-circle w-5 text-center"></i>
-                                <span>Profil Saya</span>
+
+                        <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="absolute right-0 mt-2 w-56 bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30 z-50 overflow-hidden">
+                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-pink-50 transition">
+                                <i class="fas fa-user-circle w-5 text-pink-500"></i>
+                                <span class="text-gray-700">Profil Saya</span>
                             </a>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition">
+                                    <i class="fas fa-sign-out-alt w-5 text-red-500"></i>
+                                    <span class="text-red-600">Logout</span>
                                 </button>
                             </form>
                         </div>
@@ -64,107 +87,132 @@
             </div>
         </nav>
 
+        <!-- ========================================== -->
+        <!-- SIDEBAR + CONTENT                          -->
+        <!-- ========================================== -->
         <div class="flex flex-1 overflow-hidden">
-            <!-- Sidebar -->
-            <aside class="w-64 bg-white shadow-lg hidden md:block overflow-y-auto">
+
+            <!-- ========== SIDEBAR (Glassmorphism) ========== -->
+            <aside class="w-64 bg-white/20 backdrop-blur-xl border-r border-white/30 shadow-lg hidden md:block overflow-y-auto flex-shrink-0">
                 <nav class="p-4 space-y-1">
+
                     <!-- Dashboard -->
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition {{ request()->routeIs('dashboard') ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100' }}">
-                        <i class="fas fa-home w-5 text-center"></i>
-                        <span>Dashboard</span>
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-pink-500/20 text-pink-700 shadow-inner' : 'text-gray-700 hover:bg-white/30 hover:text-pink-600' }}">
+                        <i class="fas fa-home w-5 text-center text-pink-500"></i>
+                        <span class="font-medium">Dashboard</span>
                     </a>
 
-                    @if(in_array(Auth::user()->role, ['Admin', 'Kader', 'Petugas']))
+                    @php($userRole = Auth::user()->role ?? '')
+
+                    @if(in_array($userRole, ['Admin', 'Kader', 'Petugas']))
                     <!-- Data Balita -->
-                    <a href="{{ route('balita.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition {{ request()->routeIs('balita.*') ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100' }}">
-                        <i class="fas fa-child w-5 text-center"></i>
-                        <span>Data Balita</span>
+                    <a href="{{ route('balita.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 {{ request()->routeIs('balita.*') ? 'bg-pink-500/20 text-pink-700 shadow-inner' : 'text-gray-700 hover:bg-white/30 hover:text-pink-600' }}">
+                        <i class="fas fa-child w-5 text-center text-pink-500"></i>
+                        <span class="font-medium">Data Balita</span>
                     </a>
 
                     <!-- Data Ibu -->
-                    <a href="{{ route('ibu.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition {{ request()->routeIs('ibu.*') ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100' }}">
-                        <i class="fas fa-female w-5 text-center"></i>
-                        <span>Data Ibu Hamil</span>
+                    <a href="{{ route('ibu.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 {{ request()->routeIs('ibu.*') ? 'bg-pink-500/20 text-pink-700 shadow-inner' : 'text-gray-700 hover:bg-white/30 hover:text-pink-600' }}">
+                        <i class="fas fa-female w-5 text-center text-pink-500"></i>
+                        <span class="font-medium">Data Ibu Hamil</span>
                     </a>
                     @endif
 
-                    @if(Auth::user()->role == 'Kader')
+                    @if($userRole == 'Kader')
                     <!-- Input Pemeriksaan -->
-                    <a href="{{ route('pemeriksaan.create') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition {{ request()->routeIs('pemeriksaan.*') ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100' }}">
-                        <i class="fas fa-plus-circle w-5 text-center"></i>
-                        <span>Input Pemeriksaan</span>
+                    <a href="{{ route('pemeriksaan.create') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 {{ request()->routeIs('pemeriksaan.*') ? 'bg-pink-500/20 text-pink-700 shadow-inner' : 'text-gray-700 hover:bg-white/30 hover:text-pink-600' }}">
+                        <i class="fas fa-plus-circle w-5 text-center text-pink-500"></i>
+                        <span class="font-medium">Input Pemeriksaan</span>
                     </a>
                     @endif
 
-                    <!-- Grafik KMS (hanya jika ada route) -->
+                    <!-- KMS Charts -->
                     @if(Route::has('kms.index'))
-                    <a href="{{ route('kms.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition {{ request()->routeIs('kms.*') ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100' }}">
-                        <i class="fas fa-chart-line w-5 text-center"></i>
-                        <span>Grafik KMS</span>
+                    <a href="{{ route('kms.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 {{ request()->routeIs('kms.*') ? 'bg-pink-500/20 text-pink-700 shadow-inner' : 'text-gray-700 hover:bg-white/30 hover:text-pink-600' }}">
+                        <i class="fas fa-chart-line w-5 text-center text-pink-500"></i>
+                        <span class="font-medium">KMS Charts</span>
                     </a>
                     @endif
 
-                    @if(in_array(Auth::user()->role, ['Admin', 'Petugas']))
-                    <a href="{{ route('laporan.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition {{ request()->routeIs('laporan.*') ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100' }}">
-                        <i class="fas fa-file-alt w-5 text-center"></i>
-                        <span>Laporan</span>
+                    @if(in_array($userRole, ['Admin', 'Petugas']))
+                    <!-- Laporan -->
+                    <a href="{{ route('laporan.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 {{ request()->routeIs('laporan.*') ? 'bg-pink-500/20 text-pink-700 shadow-inner' : 'text-gray-700 hover:bg-white/30 hover:text-pink-600' }}">
+                        <i class="fas fa-file-alt w-5 text-center text-pink-500"></i>
+                        <span class="font-medium">Laporan</span>
                     </a>
                     @endif
 
-                    @if(Auth::user()->role == 'Admin')
+                    @if($userRole == 'Admin')
                     <!-- Manajemen User -->
-                    <a href="{{ route('user.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg transition {{ request()->routeIs('user.*') ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100' }}">
-                        <i class="fas fa-users-cog w-5 text-center"></i>
-                        <span>Manajemen User</span>
+                    <a href="{{ route('user.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 {{ request()->routeIs('user.*') ? 'bg-pink-500/20 text-pink-700 shadow-inner' : 'text-gray-700 hover:bg-white/30 hover:text-pink-600' }}">
+                        <i class="fas fa-users-cog w-5 text-center text-pink-500"></i>
+                        <span class="font-medium">Manajemen User</span>
                     </a>
                     @endif
+
                 </nav>
             </aside>
 
-            <!-- Main Content -->
+            <!-- ========== MAIN CONTENT ========== -->
             <main class="flex-1 p-6 overflow-y-auto">
-                <!-- Header halaman -->
+
+                <!-- Page Header -->
                 @hasSection('header')
-                    <div class="mb-6">
-                        <h1 class="text-2xl font-bold text-gray-800">@yield('header')</h1>
-                    </div>
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
+                        @yield('header')
+                    </h1>
+                </div>
                 @endif
 
-                <!-- Notifikasi -->
+                <!-- ===== NOTIFICATIONS ===== -->
                 @if(session('success'))
-                    <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-sm">
-                        {{ session('success') }}
-                    </div>
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" class="mb-4 bg-pink-100/80 backdrop-blur-sm border-l-4 border-pink-500 text-pink-700 p-4 rounded-xl shadow-sm flex items-center gap-3">
+                    <i class="fas fa-check-circle text-pink-500 text-xl"></i>
+                    <span>{{ session('success') }}</span>
+                    <button @click="show = false" class="ml-auto text-pink-500 hover:text-pink-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
                 @endif
 
                 @if(session('error'))
-                    <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-sm">
-                        {{ session('error') }}
-                    </div>
+                <div class="mb-4 bg-red-100/80 backdrop-blur-sm border-l-4 border-red-500 text-red-700 p-4 rounded-xl shadow-sm flex items-center gap-3">
+                    <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
+                    <span>{{ session('error') }}</span>
+                </div>
                 @endif
 
-                @if($errors->any())
-                    <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-sm">
-                        <ul class="list-disc list-inside">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+                @if(isset($errors) && $errors->any())
+                <div class="mb-4 bg-yellow-100/80 backdrop-blur-sm border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-xl shadow-sm">
+                    <ul class="list-disc list-inside">
+                        @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
                 @endif
 
-                <!-- Konten -->
+                <!-- ===== CONTENT YIELD ===== -->
                 @yield('content')
+
             </main>
         </div>
 
-        <!-- Footer -->
-        <footer class="bg-gray-800 text-white text-center py-3 text-sm mt-auto">
-            &copy; {{ date('Y') }} SIPANTAU STUNTING - Teknik Informatika Universitas Lamappapoleonro
+        <!-- ========================================== -->
+        <!-- FOOTER                                     -->
+        <!-- ========================================== -->
+        <footer class="bg-white/20 backdrop-blur-sm border-t border-white/30 text-gray-600 text-center py-3 text-sm mt-auto">
+            &copy; {{ date('Y') }} <span class="text-pink-600 font-semibold">SIPANTAU STUNTING</span> - Teknik Informatika Universitas Lamappapoleonro
+            <span class="mx-2">|</span>
+            <span class="text-xs opacity-60">v2.4.0</span>
         </footer>
+
     </div>
 
-    <!-- Alpine JS (untuk dropdown) -->
+    <!-- ========================================== -->
+    <!-- SCRIPTS                                    -->
+    <!-- ========================================== -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
     @stack('scripts')
 </body>

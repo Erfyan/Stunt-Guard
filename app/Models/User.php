@@ -38,7 +38,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Ibu::class, 'user_id');
     }
-
-    // Relasi ke Posyandu (jika role Kader, petugas atau admin bisa punya posyandu_id, tapi kita simpan di user untuk memudahkan)
-    // Karena di ERD tidak ada posyandu_id di user, kita skip dulu. Nanti kita handle via relasi.
+    public function posyandu()
+    {
+        return $this->belongsTo(Posyandu::class);
+    }
 }

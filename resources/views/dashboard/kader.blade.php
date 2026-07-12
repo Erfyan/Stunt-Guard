@@ -58,7 +58,7 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($balitas ?? [] as $b)
+                @forelse($balita ?? [] as $b)
                 <tr>
                     <td class="px-6 py-4">{{ $balita->nama_balita ?? $balita->nama ?? '-' }}</td>
                     <td class="px-6 py-4">{{ $balita->jenis_kelamin ?? '-' }}</td>

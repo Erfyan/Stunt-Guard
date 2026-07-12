@@ -24,23 +24,17 @@
 </head>
 <body class="font-sans antialiased bg-gradient-to-br from-pink-50 via-white to-pink-100 min-h-screen">
 
-    <!-- ========================================== -->
-    <!-- DEKORASI BLOB DI BACKGROUND                -->
-    <!-- ========================================== -->
+    <!-- ===== BLOB BACKGROUND ===== -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div class="absolute -top-40 -right-40 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
         <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-400/10 rounded-full filter blur-3xl"></div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- MAIN WRAPPER                               -->
-    <!-- ========================================== -->
+    <!-- ===== MAIN WRAPPER ===== -->
     <div class="relative z-10 min-h-screen flex flex-col">
 
-        <!-- ========================================== -->
-        <!-- NAVBAR (Glassmorphism)                     -->
-        <!-- ========================================== -->
+        <!-- ===== NAVBAR ===== -->
         <nav class="sticky top-0 z-50 bg-white/20 backdrop-blur-xl border-b border-white/30 shadow-lg">
             <div class="container mx-auto px-4 py-3 flex justify-between items-center">
 
@@ -69,8 +63,10 @@
                             <i class="fas fa-chevron-down text-pink-600 text-sm"></i>
                         </button>
 
-                        <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="absolute right-0 mt-2 w-56 bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30 z-50 overflow-hidden">
-                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-pink-50 transition">
+                        <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                             class="absolute right-0 mt-2 w-56 bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30 z-50 overflow-hidden">
+                            <!-- Profil (read-only) -->
+                            <a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-3 hover:bg-pink-50 transition">
                                 <i class="fas fa-user-circle w-5 text-pink-500"></i>
                                 <span class="text-gray-700">Profil Saya</span>
                             </a>
@@ -87,12 +83,10 @@
             </div>
         </nav>
 
-        <!-- ========================================== -->
-        <!-- SIDEBAR + CONTENT                          -->
-        <!-- ========================================== -->
+        <!-- ===== SIDEBAR + CONTENT ===== -->
         <div class="flex flex-1 overflow-hidden">
 
-            <!-- ========== SIDEBAR (Glassmorphism) ========== -->
+            <!-- ===== SIDEBAR ===== -->
             <aside class="w-64 bg-white/20 backdrop-blur-xl border-r border-white/30 shadow-lg hidden md:block overflow-y-auto flex-shrink-0">
                 <nav class="p-4 space-y-1">
 
@@ -150,10 +144,16 @@
                     </a>
                     @endif
 
+                    <!-- Profil (read-only) di sidebar -->
+                    <a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 {{ request()->routeIs('profile.show') ? 'bg-pink-500/20 text-pink-700 shadow-inner' : 'text-gray-700 hover:bg-white/30 hover:text-pink-600' }}">
+                        <i class="fas fa-user-circle w-5 text-center text-pink-500"></i>
+                        <span class="font-medium">Profil Saya</span>
+                    </a>
+
                 </nav>
             </aside>
 
-            <!-- ========== MAIN CONTENT ========== -->
+            <!-- ===== MAIN CONTENT ===== -->
             <main class="flex-1 p-6 overflow-y-auto">
 
                 <!-- Page Header -->
@@ -199,9 +199,7 @@
             </main>
         </div>
 
-        <!-- ========================================== -->
-        <!-- FOOTER                                     -->
-        <!-- ========================================== -->
+        <!-- ===== FOOTER ===== -->
         <footer class="bg-white/20 backdrop-blur-sm border-t border-white/30 text-gray-600 text-center py-3 text-sm mt-auto">
             &copy; {{ date('Y') }} <span class="text-pink-600 font-semibold">SIPANTAU STUNTING</span> - Teknik Informatika Universitas Lamappapoleonro
             <span class="mx-2">|</span>
@@ -210,9 +208,7 @@
 
     </div>
 
-    <!-- ========================================== -->
-    <!-- SCRIPTS                                    -->
-    <!-- ========================================== -->
+    <!-- ===== SCRIPTS ===== -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
     @stack('scripts')
 </body>

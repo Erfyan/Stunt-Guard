@@ -31,7 +31,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
     });
-
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     // ==============================
     // BALITA (CRUD & Export)
     // ==============================
@@ -81,6 +81,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/kms', [KmsController::class, 'index'])
         ->middleware('role:Admin,Kader')
         ->name('kms.index');
+
+    // Redirect /kms/{id} ke /kms?id={id}
     Route::get('/kms/{id}', [KmsController::class, 'show'])
         ->middleware('role:Admin,Kader')
         ->name('kms.show');

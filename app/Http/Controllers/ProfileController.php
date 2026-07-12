@@ -39,4 +39,9 @@ class ProfileController extends Controller
         $user->delete();
         return redirect('/');
     }
+        public function show()
+    {
+        $user = Auth::user();
+        return view('profile.show', compact('user'));
+    }
 }

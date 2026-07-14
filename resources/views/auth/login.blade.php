@@ -88,7 +88,7 @@
     <!-- Footer -->
     <div class="mt-6 text-center text-xs text-gray-500 space-y-1">
         <p><span class="inline-block w-2 h-2 bg-green-500 rounded-full mr-1"></span> SISTEM OPERASI NORMAL</p>
-        <p>VERSI 2.4.0 – SIPANTAU STUNTING © 2024</p>
+        <p>VERSI 2.4.0 – SIPANTAU STUNTING © 2026</p>
         <p class="mt-3 text-gray-400">Dipercaya oleh 1,200+ Tenaga Medis</p>
     </div>
 

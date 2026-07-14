@@ -73,7 +73,7 @@
         <!-- Grafik -->
         <div class="lg:col-span-2 bg-pink-100/20 backdrop-blur-md border border-pink-300 shadow-lg rounded-2xl p-5 md:p-6">
             <div class="flex flex-wrap justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-gray-700">📈 Trend Stunting 2024</h3>
+                <h3 class="text-lg font-semibold text-gray-700">📈 Trend Stunting 2026</h3>
                 <span class="text-xs text-gray-500">Persentase prevalensi bulanan</span>
             </div>
             <canvas id="trenChart" height="100"></canvas>

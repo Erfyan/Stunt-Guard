@@ -143,13 +143,6 @@
                         <span class="font-medium">Manajemen User</span>
                     </a>
                     @endif
-
-                    <!-- Profil (read-only) di sidebar -->
-                    <a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 {{ request()->routeIs('profile.show') ? 'bg-pink-500/20 text-pink-700 shadow-inner' : 'text-gray-700 hover:bg-white/30 hover:text-pink-600' }}">
-                        <i class="fas fa-user-circle w-5 text-center text-pink-500"></i>
-                        <span class="font-medium">Profil Saya</span>
-                    </a>
-
                 </nav>
             </aside>
 

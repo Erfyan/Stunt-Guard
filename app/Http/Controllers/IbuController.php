@@ -68,18 +68,22 @@ class IbuController extends Controller
             ->with('success', 'Data Ibu berhasil ditambahkan! Akun login telah dibuat.');
     }
 
-    public function show(Ibu $ibu)
+    public function show($id)
     {
+        $ibu = Ibu::with(['user', 'balitas'])->findOrFail($id);
         return view('ibu.show', compact('ibu'));
     }
 
-    public function edit(Ibu $ibu)
+ public function edit($id)
     {
+        $ibu = Ibu::with('user')->findOrFail($id);
         return view('ibu.edit', compact('ibu'));
     }
 
-    public function update(Request $request, Ibu $ibu)
+    public function update(Request $request, $id)
     {
+        $ibu = Ibu::findOrFail($id);
+
         $request->validate([
             'nik' => 'required|string|max:20|unique:ibuses,nik,' . $ibu->id,
             'nama_ibu' => 'required|string|max:100',
@@ -87,21 +91,26 @@ class IbuController extends Controller
             'alamat' => 'nullable|string',
             'no_hp' => 'nullable|string|max:20',
             'email' => 'required|email|unique:users,email,' . $ibu->user_id,
+            'password' => 'nullable|min:8|confirmed',
         ]);
 
-        // Update User
-        $ibu->user->update([
+        // Update data ibu
+        $ibu->update($request->only(['nik', 'nama_ibu', 'tanggal_lahir', 'alamat', 'no_hp']));
+
+        // Update user
+        $user = User::find($ibu->user_id);
+        $userData = [
             'nama' => $request->nama_ibu,
             'email' => $request->email,
-        ]);
-
-        // Update Ibu
-        $ibu->update($request->all());
+        ];
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
+        }
+        $user->update($userData);
 
         return redirect()->route('ibu.index')
-            ->with('success', 'Data Ibu berhasil diperbarui!');
+            ->with('success', 'Data ibu berhasil diperbarui!');
     }
-
     public function destroy(Ibu $ibu)
     {
         // Hapus user juga

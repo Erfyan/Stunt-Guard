@@ -15,33 +15,48 @@ class KmsController extends Controller
     {
         $user = Auth::user();
 
+        // Jika user tidak login (seharusnya tidak terjadi karena middleware)
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
         // ===== 1. Ambil daftar balita (filter berdasarkan role) =====
         $search = $request->get('search');
         $balitaId = $request->get('id');
 
-        $balitas = Balita::with(['ibu', 'posyandu']);
+        // Query dasar
+        $balitasQuery = Balita::with(['ibu', 'posyandu']);
 
-        // Filter role
+        // Filter berdasarkan role
         if ($user->role == 'Kader') {
-            $balitas->where('posyandu_id', $user->posyandu_id);
+            // Kader hanya melihat balita di posyandunya
+            if ($user->posyandu_id) {
+                $balitasQuery->where('posyandu_id', $user->posyandu_id);
+            } else {
+                // Jika kader tidak memiliki posyandu, tampilkan kosong
+                $balitasQuery->whereRaw('1 = 0');
+            }
         } elseif ($user->role == 'Ibu') {
+            // Ibu hanya melihat anaknya sendiri
             $ibu = $user->ibu;
             if ($ibu) {
-                $balitas->where('ibu_id', $ibu->id);
+                $balitasQuery->where('ibu_id', $ibu->id);
             } else {
-                $balitas->whereRaw('1 = 0');
+                $balitasQuery->whereRaw('1 = 0');
             }
         }
+        // Admin dan Petugas tidak difilter, melihat semua
 
-        // Filter pencarian
+        // Filter pencarian (jika ada)
         if ($search) {
-            $balitas->where(function ($q) use ($search) {
+            $balitasQuery->where(function ($q) use ($search) {
                 $q->where('nama_balita', 'like', "%{$search}%")
                   ->orWhere('nik', 'like', "%{$search}%");
             });
         }
 
-        $balitas = $balitas->orderBy('nama_balita')->paginate(15);
+        // Eksekusi query dengan pagination
+        $balitas = $balitasQuery->orderBy('nama_balita')->paginate(15);
 
         // ===== 2. Jika ada parameter id, ambil data balita untuk grafik =====
         $balita = null;
@@ -61,6 +76,7 @@ class KmsController extends Controller
             ])->find($balitaId);
 
             if ($balita) {
+                // Siapkan data untuk Chart.js
                 $chartLabels = $balita->pemeriksaans->map(function ($item) {
                     return $item->tanggal->format('d/m/Y');
                 })->toArray();

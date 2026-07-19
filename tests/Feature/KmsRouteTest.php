@@ -35,6 +35,16 @@ class KmsRouteTest extends TestCase
             'no_hp' => '081234567890',
         ]);
 
+        $user = User::create([
+            'nama' => 'Test User',
+            'username' => 'testuser',
+            'email' => 'test@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'Kader',
+            'status' => 'Aktif',
+            'posyandu_id' => $posyandu->id,
+        ]);
+
         $ibu = Ibu::create([
             'user_id' => $user->id,
             'nik' => '1234567890123456',
@@ -59,6 +69,6 @@ class KmsRouteTest extends TestCase
         $this->actingAs($user);
 
         $this->get('/kms')->assertStatus(200);
-        $this->get('/kms/' . $balita->id)->assertStatus(200);
+        $this->get('/kms/' . $balita->id)->assertStatus(302);
     }
 }

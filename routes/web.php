@@ -118,4 +118,6 @@ Route::middleware(['auth'])->group(function () {
     . '</pre>');
 });
 
+}); // <-- INI YANG DITAMBAHKAN, menutup grup Route::middleware(['auth']) dari baris 18
+
 require __DIR__.'/auth.php';

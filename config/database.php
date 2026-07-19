@@ -127,7 +127,6 @@ return [
             PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
             1002 => true, // PDO::MYSQL_ATTR_GET_SERVER_PUBLIC_KEY - izinkan ambil RSA public key dari server
         ],
-        ],
 
         'default' => [
             'url' => env('REDIS_URL'),

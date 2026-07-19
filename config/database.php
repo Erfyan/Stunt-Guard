@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Support\Str;
-if (!defined('PDO::MYSQL_ATTR_GET_SERVER_PUBLIC_KEY')) {
-    define('PDO_MYSQL_ATTR_GET_SERVER_PUBLIC_KEY_FALLBACK', 1002);
-}
 
 return [
 

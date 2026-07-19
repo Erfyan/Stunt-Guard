@@ -4,6 +4,8 @@ PHP_VERSION = "8.4"
 [phases.build]
 cmds = [
     "composer install --no-dev --optimize-autoloader",
+    "npm install",
+    "npm run build",
     "php -v > public/phpinfo.txt",
     "php -m >> public/phpinfo.txt",
     "php artisan route:cache",

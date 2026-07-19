@@ -45,4 +45,5 @@ RUN php artisan route:cache \
     && php artisan view:cache
 
 # Set start command (run migrations and start FrankenPHP)
-CMD php artisan migrate --force && frankenphp php-server --listen :$PORT --public-dir public/
+CMD php artisan migrate --force && frankenphp php-server --listen :$PORT -r public
+

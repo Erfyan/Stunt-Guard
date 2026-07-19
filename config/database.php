@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => reseau.proxy.rlwy.net, 'railway'),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------

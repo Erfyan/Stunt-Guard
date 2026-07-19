@@ -110,6 +110,12 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:Admin'])->group(function () {
         Route::resource('user', UserController::class);
     });
+    
+    Route::get('/debug-phpinfo', function () {
+    return response('<pre>' . 
+        'PHP Version: ' . phpversion() . "\n\n" .
+        'Loaded Extensions: ' . "\n" . implode("\n", get_loaded_extensions())
+    . '</pre>');
 });
 
 require __DIR__.'/auth.php';

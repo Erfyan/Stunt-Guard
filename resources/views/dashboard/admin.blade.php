@@ -169,24 +169,18 @@
     <!-- ============================================= -->
     <div class="bg-pink-100/20 backdrop-blur-md border border-pink-300 shadow-lg rounded-2xl p-5 md:p-6">
         <h3 class="text-lg font-semibold text-pink-500 mb-4">📍 Aktivitas Wilayah</h3>
-        <div class="space-y-4">
-            <div>
-                <div class="flex justify-between text-sm">
-                    <span class="font-medium text-gray-700">Posyandu Melati</span>
-                    <span class="text-pink-500 font-bold">85%</span>
-                </div>
-                <div class="w-full bg-white/30 rounded-full h-2.5 mt-1">
-                    <div class="bg-pink-500 h-2.5 rounded-full" style="width:85%"></div>
-                </div>
-            </div>
-            <div>
-                <div class="flex justify-between text-sm">
-                    <span class="font-medium text-gray-700">Posyandu Anggrek</span>
-                    <span class="text-pink-500 font-bold">60%</span>
-                </div>
-                <div class="w-full bg-white/30 rounded-full h-2.5 mt-1">
-                    <div class="bg-pink-400 h-2.5 rounded-full" style="width:60%"></div>
-                </div>
+            <div class="space-y-4">
+                @foreach($posyanduStats ?? [] as $stat)
+                    <div>
+                        <div class="flex justify-between text-sm">
+                            <span class="font-medium text-gray-700">{{ $stat['nama'] }}</span>
+                            <span class="text-pink-500 font-bold">{{ $stat['stunted_percent'] }}%</span>
+                        </div>
+                        <div class="w-full bg-white/30 rounded-full h-2.5 mt-1">
+                            <div class="bg-pink-500 h-2.5 rounded-full" style="width:{{ $stat['stunted_percent'] }}%"></div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>

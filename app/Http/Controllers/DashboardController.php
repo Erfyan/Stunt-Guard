@@ -22,9 +22,34 @@ class DashboardController extends Controller
             $totalBalita = Balita::count();
             $totalIbu = Ibu::count();
             $totalUser = User::count();
-            $balitas = Balita::with(['ibu', 'posyandu'])->latest()->limit(10)->get();
+            $balitas = Balita::with(['ibu', 'posyandu'])
+                ->latest()
+                ->limit(10)
+                ->get();
 
-            return view('dashboard.admin', compact('totalBalita', 'totalIbu', 'totalUser', 'balitas'));
+            // Compute Posyandu activity statistics
+            $posyanduStats = Posyandu::with(['balitas' => function($q) {
+                    $q->with(['pemeriksaans' => function($q2) {
+                        $q2->latest()->limit(1);
+                    }]);
+                }])
+                ->get()
+                ->map(function($p) {
+                    $total = $p->balitas->count();
+                    $stunted = $p->balitas->filter(function($b) {
+                        $last = $b->pemeriksaans->first();
+                        return $last && in_array($last->status_stunting, ['Stunted', 'Severely Stunted']);
+                    })->count();
+                    $percent = $total ? round(($stunted / $total) * 100) : 0;
+                    return [
+                        'nama' => $p->nama_posyandu,
+                        'total' => $total,
+                        'stunted_percent' => $percent,
+                    ];
+                })
+                ->toArray();
+
+            return view('dashboard.admin', compact('totalBalita', 'totalIbu', 'totalUser', 'balitas', 'posyanduStats'));
         }
 
         // ========== KADER ==========

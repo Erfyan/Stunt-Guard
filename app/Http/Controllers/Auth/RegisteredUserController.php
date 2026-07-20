@@ -24,7 +24,7 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['required', 'in:Admin,Kader,Ibu'], // tambahkan validasi role
+            'role' => ['required', 'in:Kader,Ibu'], // removed Admin from allowed roles
         ]);
 
         // Buat username unik dari name

@@ -76,7 +76,6 @@
                     class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition text-gray-800">
                 <option value="Ibu">Ibu (Orang Tua)</option>
                 <option value="Kader">Kader Posyandu</option>
-                <option value="Admin">Admin</option>
             </select>
             @error('role')
                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>

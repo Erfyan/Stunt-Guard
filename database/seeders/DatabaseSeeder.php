@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(PosyanduSeeder::class);
+        // Grab the first Posyandu inserted by the seeder for later use
+        $posyandu = Posyandu::first();
 
         // 4. User Ibu (Orang Tua)
         $userIbu = User::create([
@@ -38,7 +40,7 @@ class DatabaseSeeder extends Seeder
         // 6. Balita (milik Ibu)
         \App\Models\Balita::create([
             'ibu_id' => $ibu->id,
-            'posyandu_id' => $posyandu1->id,
+            'posyandu_id' => $posyandu->id,
             'nama_balita' => 'Budi Pratama',
             'nik' => '3273012345678902',
             'jenis_kelamin' => 'Laki-laki',

@@ -44,8 +44,9 @@
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        "post-install-cmd": [
+            "@php artisan package:discover --ansi",
+            "php -r \"file_put_contents('vendor/voku/portable-ascii/src/voku/helper/ASCII.php', preg_replace('/bool \\$(replace_single_chars_only) = null/', '?bool \\1 = null', file_get_contents('vendor/voku/portable-ascii/src/voku/helper/ASCII.php')));\""
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"

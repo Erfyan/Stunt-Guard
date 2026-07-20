@@ -108,7 +108,7 @@
                     <!-- Data Ibu -->
                     <a href="{{ route('ibu.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 {{ request()->routeIs('ibu.*') ? 'bg-pink-500/20 text-pink-700 shadow-inner' : 'text-gray-700 hover:bg-white/30 hover:text-pink-600' }}">
                         <i class="fas fa-female w-5 text-center text-pink-500"></i>
-                        <span class="font-medium">Data Ibu Hamil</span>
+                        <span class="font-medium">Data Ibu</span>
                     </a>
                     @endif
 
@@ -202,7 +202,6 @@
     </div>
 
     <!-- ===== SCRIPTS ===== -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
     @stack('scripts')
 </body>
 </html>

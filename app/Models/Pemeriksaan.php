@@ -36,6 +36,12 @@ class Pemeriksaan extends Model
         return $this->belongsTo(Balita::class, 'balita_id');
     }
 
+    // Relasi ke User pembuat
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
     // Relasi ke PelayananKesehatan (one-to-one)
     public function pelayananKesehatan()
     {

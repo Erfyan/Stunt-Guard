@@ -12,39 +12,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Posyandu
-        $posyandu1 = Posyandu::create([
-            'nama_posyandu' => 'Posyandu Mawar',
-            'desa' => 'Parang Loe',
-            'kecamatan' => 'Tamalanrea',
-            'kabupaten' => 'Makassar',
-            'alamat' => 'Jl. Kesehatan No. 1',
-            'latitude' => -5.12345678,
-            'longitude' => 119.45678901,
-            'no_hp' => '081234567890'
-        ]);
-
-        // 2. User Admin
-        $admin = User::create([
-            'nama' => 'Admin Utama',
-            'username' => 'admin',
-            'email' => 'admin@stuntguard.com',
-            'password' => Hash::make('password'),
-            'role' => 'Admin',
-            'no_hp' => '081234567890',
-            'status' => 'Aktif'
-        ]);
-
-        // 3. User Kader
-        $kader = User::create([
-            'nama' => 'Kader Aisyah',
-            'username' => 'kader_mawar',
-            'email' => 'kader@posyandu.com',
-            'password' => Hash::make('password'),
-            'role' => 'Kader',
-            'no_hp' => '081298765432',
-            'status' => 'Aktif'
-        ]);
+        $this->call(PosyanduSeeder::class);
 
         // 4. User Ibu (Orang Tua)
         $userIbu = User::create([

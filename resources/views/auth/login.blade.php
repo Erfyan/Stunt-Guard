@@ -33,10 +33,11 @@
         <div>
             <label for="login" class="block text-sm font-medium text-gray-700">USERNAME ATAU EMAIL</label>
             <input id="login" type="text" name="login" value="{{ old('login') }}" required autofocus
+                   @error('login') aria-invalid="true" aria-describedby="login-error" @enderror
                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition text-gray-800"
                    placeholder="Masukkan username atau email anda">
             @error('login')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                <p id="login-error" class="text-red-500 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>
 
@@ -45,14 +46,15 @@
             <div class="flex justify-between items-center">
                 <label for="password" class="block text-sm font-medium text-gray-700">PASSWORD</label>
                 @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" class="text-sm text-pink-500 hover:text-pink-700 transition">Lupa Password?</a>
+                    <a href="{{ route('password.request') }}" class="text-sm text-pink-500 hover:text-pink-700 focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:outline-none rounded transition">Lupa Password?</a>
                 @endif
             </div>
             <input id="password" type="password" name="password" required
+                   @error('password') aria-invalid="true" aria-describedby="password-error" @enderror
                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition text-gray-800"
                    placeholder="Masukkan password">
             @error('password')
-                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                <p id="password-error" class="text-red-500 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>
 
@@ -74,11 +76,11 @@
     <div class="mt-6 text-center">
         <p class="text-sm text-gray-500">ATAU MASUK DENGAN</p>
         <div class="flex justify-center gap-4 mt-3">
-            <button class="bg-gray-100 border border-gray-300 px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-gray-200 transition">
+            <button type="button" class="bg-gray-100 border border-gray-300 px-4 py-3 rounded-xl flex items-center gap-2 hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 transition">
                 <i class="fas fa-fingerprint text-pink-500"></i>
                 <span class="text-sm text-gray-700">Biometrik</span>
             </button>
-            <button class="bg-gray-100 border border-gray-300 px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-gray-200 transition">
+            <button type="button" class="bg-gray-100 border border-gray-300 px-4 py-3 rounded-xl flex items-center gap-2 hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 transition">
                 <i class="fas fa-key text-pink-500"></i>
                 <span class="text-sm text-gray-700">Kode Akses</span>
             </button>

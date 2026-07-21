@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,6 +20,10 @@
     @stack('styles')
 </head>
 <body class="font-sans antialiased bg-gradient-to-br from-pink-50 via-white to-pink-100 min-h-screen flex items-center justify-center p-4 relative">
+    <!-- Skip to main content -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-0 focus:left-0 focus:p-4 focus:bg-white focus:text-pink-600 focus:font-bold focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-pink-500 rounded-br-lg transition">
+        Lompat ke konten utama
+    </a>
 
     <!-- ===== BLOB BACKGROUND ===== -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
@@ -29,9 +33,9 @@
     </div>
 
     <!-- ===== MAIN CARD ===== -->
-    <div class="relative z-10 w-full max-w-md">
+    <main id="main-content" tabindex="-1" class="relative z-10 w-full max-w-md focus:outline-none">
         @yield('content')
-    </div>
+    </main>
 
     <!-- ===== SCRIPTS ===== -->
     @stack('scripts')

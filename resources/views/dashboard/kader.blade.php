@@ -74,7 +74,7 @@
             <p class="text-sm text-gray-600">Lihat rekap data dan analisis stunting di posyandu Anda.</p>
         </div>
         <a href="{{ route('laporan.index') }}" 
-           class="bg-pink-500 hover:bg-pink-600 text-white font-medium px-5 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+           class="bg-pink-500 hover:bg-pink-600 text-white font-medium px-5 py-2.5 rounded-xl shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pink-500 transition flex items-center gap-2">
             <i class="fas fa-file-alt"></i> Lihat Laporan
         </a>
     </div>
@@ -101,7 +101,7 @@
     <div class="bg-white/20 backdrop-blur-md border border-white/30 shadow-lg rounded-2xl overflow-hidden">
         <div class="px-6 py-4 border-b border-white/30 flex justify-between items-center">
             <h4 class="text-lg font-semibold text-pink-600">📋 Daftar Balita</h4>
-            <a href="{{ route('balita.create') }}" class="bg-pink-500 hover:bg-pink-600 text-white text-sm font-medium px-4 py-2 rounded-xl shadow transition flex items-center gap-1">
+            <a href="{{ route('balita.create') }}" class="bg-pink-500 hover:bg-pink-600 text-white text-sm font-medium px-4 py-2 rounded-xl shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pink-500 transition flex items-center gap-1">
                 <i class="fas fa-plus"></i> Tambah
             </a>
         </div>
@@ -109,11 +109,11 @@
             <table class="w-full divide-y divide-white/20 text-sm">
                 <thead class="bg-pink-100/30 backdrop-blur-sm">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Nama</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">JK</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Umur</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Status</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Aksi</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Nama</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">JK</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Umur</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Status</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-pink-700 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white/10 backdrop-blur-sm divide-y divide-white/10">
@@ -135,7 +135,7 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 whitespace-nowrap">
-                            <a href="{{ route('balita.show', $b->id) }}" class="text-pink-500 hover:text-pink-700 transition" title="Lihat Detail">
+                            <a href="{{ route('balita.show', $b->id) }}" class="text-pink-500 hover:text-pink-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 rounded p-1 transition" title="Lihat Detail">
                                 <i class="fas fa-eye"></i>
                             </a>
                         </td>

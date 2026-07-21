@@ -105,8 +105,8 @@ class PemeriksaanController extends Controller
             'status_stunting' => $result['status_stunting'],
             'bb_tidak_nak' => $result['bb_tidak_nak'] ?? 'Tidak',
             'catatan' => $request->catatan,
-            'petugas' => Auth::user()->nama,   // tetap pakai petugas (string)
-            // 'created_by' => Auth::id(),     // komentar atau hapus
+            'petugas' => Auth::user()->nama,
+            'created_by' => Auth::id(),
         ]);
         // Simpan pelayanan kesehatan
         $pelayanan = null;

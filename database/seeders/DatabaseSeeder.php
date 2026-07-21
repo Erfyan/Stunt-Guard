@@ -16,7 +16,52 @@ class DatabaseSeeder extends Seeder
         // Grab the first Posyandu inserted by the seeder for later use
         $posyandu = Posyandu::first();
 
-        // 4. User Ibu (Orang Tua)
+        // 1. User Admin
+        User::create([
+            'nama' => 'Administrator System',
+            'username' => 'admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'Admin',
+            'no_hp' => '081234567890',
+            'status' => 'Aktif'
+        ]);
+
+        // 2. User Kader
+        User::create([
+            'nama' => 'Kader Siti',
+            'username' => 'kader_siti',
+            'email' => 'kader@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'Kader',
+            'posyandu_id' => $posyandu ? $posyandu->id : null,
+            'no_hp' => '081234567891',
+            'status' => 'Aktif'
+        ]);
+
+        // 3. User Puskesmas / Petugas
+        User::create([
+            'nama' => 'Petugas Puskesmas',
+            'username' => 'puskesmas',
+            'email' => 'puskesmas@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'Puskesmas',
+            'no_hp' => '081234567892',
+            'status' => 'Aktif'
+        ]);
+
+        // 4. User Dinas Kesehatan
+        User::create([
+            'nama' => 'Dinas Kesehatan',
+            'username' => 'dinas',
+            'email' => 'dinas@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'Dinas',
+            'no_hp' => '081234567893',
+            'status' => 'Aktif'
+        ]);
+
+        // 5. User Ibu (Orang Tua)
         $userIbu = User::create([
             'nama' => 'Ani Sulastri',
             'username' => 'ibu_ani',
@@ -27,7 +72,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'Aktif'
         ]);
 
-        // 5. Data Ibu (terhubung ke user Ibu)
+        // 6. Data Ibu (terhubung ke user Ibu)
         $ibu = Ibu::create([
             'user_id' => $userIbu->id,
             'nik' => '3273012345678901',
@@ -37,10 +82,10 @@ class DatabaseSeeder extends Seeder
             'no_hp' => '081355667788'
         ]);
 
-        // 6. Balita (milik Ibu)
+        // 7. Balita (milik Ibu)
         \App\Models\Balita::create([
             'ibu_id' => $ibu->id,
-            'posyandu_id' => $posyandu->id,
+            'posyandu_id' => $posyandu ? $posyandu->id : null,
             'nama_balita' => 'Budi Pratama',
             'nik' => '3273012345678902',
             'jenis_kelamin' => 'Laki-laki',

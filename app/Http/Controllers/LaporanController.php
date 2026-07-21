@@ -28,7 +28,7 @@ class LaporanController extends Controller
             $total = $items->count();
             $stunting = $items->filter(function ($item) {
                 $last = $item->pemeriksaans->first();
-                return $last && in_array($last->status_stunting, ['Stunting', 'Severely Stunted']);
+                return $last && in_array($last->status_stunting, ['Stunted', 'Severely Stunted']);
             })->count();
             $normal = $items->filter(function ($item) {
                 $last = $item->pemeriksaans->first();
@@ -98,7 +98,7 @@ class LaporanController extends Controller
             $total = $items->count();
             $stunting = $items->filter(function ($item) {
                 $last = $item->pemeriksaans->first();
-                return $last && in_array($last->status_stunting, ['Stunting', 'Severely Stunted']);
+                return $last && in_array($last->status_stunting, ['Stunted', 'Severely Stunted']);
             })->count();
             $normal = $items->filter(function ($item) {
                 $last = $item->pemeriksaans->first();

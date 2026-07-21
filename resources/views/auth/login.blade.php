@@ -29,13 +29,13 @@
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
 
-        <!-- Username -->
+        <!-- Username / Email -->
         <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">USERNAME</label>
-            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
+            <label for="login" class="block text-sm font-medium text-gray-700">USERNAME ATAU EMAIL</label>
+            <input id="login" type="text" name="login" value="{{ old('login') }}" required autofocus
                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition text-gray-800"
-                   placeholder="Masukkan username anda">
-            @error('email')
+                   placeholder="Masukkan username atau email anda">
+            @error('login')
                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>

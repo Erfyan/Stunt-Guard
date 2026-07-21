@@ -55,9 +55,12 @@
                         <td class="px-4 py-3 whitespace-nowrap text-gray-700">{{ $user->username }}</td>
                         <td class="px-4 py-3 whitespace-nowrap">
                             <span class="px-3 py-1 rounded-full text-xs font-bold
-                                @if($user->role == 'Admin') text-purple-800
-                                @elseif($user->role == 'Kader') text-green-800
-                                @elseif($user->role == 'Ibu') text-blue-800
+                                @if($user->role == 'Admin') text-purple-800 bg-purple-100
+                                @elseif($user->role == 'Kader') text-green-800 bg-green-100
+                                @elseif($user->role == 'Ibu') text-blue-800 bg-blue-100
+                                @elseif($user->role == 'Puskesmas') text-orange-800 bg-orange-100
+                                @elseif($user->role == 'Dinas') text-teal-800 bg-teal-100
+                                @elseif($user->role == 'Petugas') text-yellow-800 bg-yellow-100
                                 @else bg-gray-200 text-gray-800 @endif
                             ">
                                 {{ strtoupper($user->role) }}

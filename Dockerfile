@@ -27,19 +27,14 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 # Copy Composer binary
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# --- Layer cache optimization: copy lock files first ---
-# composer.lock ensures reproducible PHP dependency installs
-COPY composer.json composer.lock ./
+# Copy full application code (required before composer install
+# so post-autoload-dump scripts can find app/Helper/helper.php)
+COPY . /app
 
-# package-lock.json ensures reproducible Node dependency installs
-COPY package.json package-lock.json ./
-
-# Install PHP dependencies (uses composer.lock; post-install-cmd fixes voku/portable-ascii)
+# Install PHP dependencies — uses composer.lock for reproducible installs.
+# post-install-cmd in composer.json will also patch voku/portable-ascii.
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --optimize-autoloader --no-dev --no-interaction
-
-# Copy remaining application code
-COPY . /app
 
 # Install Node dependencies (uses package-lock.json) and compile assets
 RUN npm ci && npm run build && rm -rf node_modules

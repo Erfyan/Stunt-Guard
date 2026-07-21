@@ -24,26 +24,33 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy Composer
+# Copy Composer binary
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy application code
+# --- Layer cache optimization: copy lock files first ---
+# composer.lock ensures reproducible PHP dependency installs
+COPY composer.json composer.lock ./
+
+# package-lock.json ensures reproducible Node dependency installs
+COPY package.json package-lock.json ./
+
+# Install PHP dependencies (uses composer.lock; post-install-cmd fixes voku/portable-ascii)
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN composer install --optimize-autoloader --no-dev --no-interaction
+
+# Copy remaining application code
 COPY . /app
 
-# Install PHP dependencies
-ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN composer install --optimize-autoloader --no-dev --no-interaction --no-scripts
-
-# Install Node dependencies and compile assets
+# Install Node dependencies (uses package-lock.json) and compile assets
 RUN npm ci && npm run build && rm -rf node_modules
 
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
-# Run optimization scripts (except config cache which might depend on runtime environment variables)
+# Cache routes and views at build time
 RUN php artisan route:cache \
     && php artisan view:cache
 
-# Set start command (run migrations and start FrankenPHP)
+# Run migrations and start FrankenPHP
 CMD php artisan migrate --force && frankenphp php-server --listen :$PORT -r public
 

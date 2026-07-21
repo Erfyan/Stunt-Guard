@@ -42,10 +42,5 @@ RUN npm ci && npm run build && rm -rf node_modules
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
-# Cache routes and views at build time
-RUN php artisan route:cache \
-    && php artisan view:cache
-
-# Run migrations and start FrankenPHP
-CMD php artisan migrate --force && frankenphp php-server --listen :$PORT -r public
-
+# At runtime: apply env vars → cache config/routes/views → migrate → serve
+CMD ["sh", "-c", "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && frankenphp php-server --listen :$PORT -r public"]

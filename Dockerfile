@@ -36,10 +36,6 @@ COPY . /app
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --optimize-autoloader --no-dev --no-interaction
 
-# Explicit patch: fix voku/portable-ascii PHP 8.4 implicit nullable deprecation.
-# str_replace is used instead of preg_replace to avoid regex $ end-of-line ambiguity.
-RUN php -r "file_put_contents('/app/vendor/voku/portable-ascii/src/voku/helper/ASCII.php', str_replace('bool \$replace_single_chars_only = null', '?bool \$replace_single_chars_only = null', file_get_contents('/app/vendor/voku/portable-ascii/src/voku/helper/ASCII.php')));"
-
 # Install Node dependencies (uses package-lock.json) and compile assets
 RUN npm ci && npm run build && rm -rf node_modules
 
